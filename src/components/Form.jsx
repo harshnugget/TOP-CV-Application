@@ -1,4 +1,3 @@
-import { useState } from "react";
 import ContactInfo from "./ContactInfo.jsx";
 import Profile from "./Profile.jsx";
 import EmploymentHistory from "./EmploymentHistory.jsx";

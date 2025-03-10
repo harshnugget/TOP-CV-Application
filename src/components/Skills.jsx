@@ -1,35 +1,54 @@
+import { useState } from "react";
+
 export default function Skills() {
+  const [skills, setSkills] = useState([]);
+
+  function addSkill() {
+    setSkills([...skills, { id: crypto.randomUUID(), title: "" }]);
+  }
+
+  function removeSkill(id) {
+    setSkills(skills.filter((skill) => skill.id !== id));
+  }
+
+  function updateSkill(id, value) {
+    setSkills(
+      skills.map((skill) =>
+        skill.id === id ? { ...skill, title: value } : skill
+      )
+    );
+  }
+
   return (
     <div className="skills">
-      <button type="button" className="add-btn">
+      <button type="button" className="add-btn" onClick={addSkill}>
         Add Skill
       </button>
 
       <ul>
-        <li>
-          <fieldset>
-            <label htmlFor="skill-1">
-              Skill: <input type="text" id="skill-1" name="skill-1" />
-            </label>
-
-            <label>Proficiency:</label>
-            {[1, 2, 3, 4, 5].map((level) => (
-              <label key={level} htmlFor={`skill-1-${level}`}>
+        {skills.map((skill) => (
+          <li key={skill.id}>
+            <fieldset>
+              <label htmlFor="skill-1">
+                Skill:{" "}
                 <input
-                  type="radio"
-                  id={`skill-1-${level}`}
-                  name="skill-1-proficiency"
-                  value={level}
+                  type="text"
+                  value={skill.title}
+                  placeholder="Enter the name of a skill"
+                  onChange={(e) => updateSkill(skill.id, e.target.value)}
                 />
-                {level}
               </label>
-            ))}
 
-            <button type="button" className="remove-btn">
-              Remove Skill
-            </button>
-          </fieldset>
-        </li>
+              <button
+                type="button"
+                className="remove-btn"
+                onClick={() => removeSkill(skill.id)}
+              >
+                Remove Skill
+              </button>
+            </fieldset>
+          </li>
+        ))}
       </ul>
     </div>
   );
