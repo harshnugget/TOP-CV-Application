@@ -12,7 +12,7 @@ function Responsibilities({ responsibilities, updateResponsibilities }) {
     updateResponsibilities(responsibilities.filter((resp) => resp.id !== id));
   }
 
-  function updateTitle(id, value) {
+  function handleChange(id, value) {
     updateResponsibilities(
       responsibilities.map((resp) =>
         resp.id === id ? { ...resp, title: value } : resp
@@ -34,7 +34,7 @@ function Responsibilities({ responsibilities, updateResponsibilities }) {
               <input
                 type="text"
                 value={resp.title}
-                onChange={(e) => updateTitle(resp.id, e.target.value)}
+                onChange={(e) => handleChange(resp.id, e.target.value)}
               />
             </label>
 
@@ -73,41 +73,12 @@ export default function EmploymentHistory() {
     setHistory(history.filter((emp) => emp.id !== id));
   }
 
-  function updateTitle(id, value) {
+  function handleChange(id, field, value) {
     setHistory(
-      history.map((emp) =>
-        emp.id === id ? { ...emp, occupation: value } : emp
-      )
+      history.map((emp) => (emp.id === id ? { ...emp, [field]: value } : emp))
     );
   }
 
-  function updateFromDate(id, date) {
-    setHistory(
-      history.map((emp) => (emp.id === id ? { ...emp, fromDate: date } : emp))
-    );
-  }
-
-  function updateToDate(id, date) {
-    setHistory(
-      history.map((emp) => (emp.id === id ? { ...emp, toDate: date } : emp))
-    );
-  }
-
-  function updateDescription(id, value) {
-    setHistory((prevHistory) =>
-      prevHistory.map((emp) =>
-        emp.id === id ? { ...emp, description: value } : emp
-      )
-    );
-  }
-
-  function updateResponsibilities(id, newResponsibilities) {
-    setHistory(
-      history.map((emp) =>
-        emp.id === id ? { ...emp, responsibilities: newResponsibilities } : emp
-      )
-    );
-  }
   return (
     <div className="employment-history">
       <button type="button" className="add-btn" onClick={addHistory}>
@@ -124,7 +95,9 @@ export default function EmploymentHistory() {
                   type="text"
                   value={emp.occupation}
                   placeholder="Enter the title of your occupation"
-                  onChange={(e) => updateTitle(emp.id, e.target.value)}
+                  onChange={(e) =>
+                    handleChange(emp.id, "title", e.target.value)
+                  }
                 />
               </label>
 
@@ -134,7 +107,9 @@ export default function EmploymentHistory() {
                   <input
                     type="date"
                     value={emp.fromDate}
-                    onChange={(e) => updateFromDate(emp.id, e.target.value)}
+                    onChange={(e) =>
+                      handleChange(emp.id, "fromDate", e.target.value)
+                    }
                   />
                 </label>
 
@@ -143,7 +118,9 @@ export default function EmploymentHistory() {
                   <input
                     type="date"
                     value={emp.toDate}
-                    onChange={(e) => updateToDate(emp.id, e.target.value)}
+                    onChange={(e) =>
+                      handleChange(emp.id, "toDate", e.target.value)
+                    }
                   />
                 </label>
               </div>
@@ -151,7 +128,7 @@ export default function EmploymentHistory() {
               <Responsibilities
                 responsibilities={emp.responsibilities}
                 updateResponsibilities={(newResponsibilities) =>
-                  updateResponsibilities(emp.id, newResponsibilities)
+                  handleChange(emp.id, "responsibilities", newResponsibilities)
                 }
               />
 
@@ -160,7 +137,9 @@ export default function EmploymentHistory() {
                 <textarea
                   value={emp.description}
                   placeholder="Write some additional information about your job..."
-                  onChange={(e) => updateDescription(emp.id, e.target.value)}
+                  onChange={(e) =>
+                    handleChange(emp.id, "description", e.target.value)
+                  }
                 />
               </label>
 

@@ -12,18 +12,10 @@ function Grades({ grades, updateGrades }) {
     updateGrades(grades.filter((grade) => grade.id !== id));
   }
 
-  function updateTitle(id, value) {
+  function handleChange(id, field, value) {
     updateGrades(
       grades.map((grade) =>
-        grade.id === id ? { ...grade, title: value } : grade
-      )
-    );
-  }
-
-  function updateScore(id, value) {
-    updateGrades(
-      grades.map((grade) =>
-        grade.id === id ? { ...grade, score: value } : grade
+        grade.id === id ? { ...grade, [field]: value } : grade
       )
     );
   }
@@ -41,12 +33,12 @@ function Grades({ grades, updateGrades }) {
             <input
               type="text"
               value={grade.title}
-              onChange={(e) => updateTitle(grade.id, e.target.value)}
+              onChange={(e) => handleChange(grade.id, "title", e.target.value)}
             />
             <input
               type="text"
               value={grade.score}
-              onChange={(e) => updateScore(grade.id, e.target.value)}
+              onChange={(e) => handleChange(grade.id, "score", e.target.value)}
             />
             <button
               type="button"
@@ -83,35 +75,9 @@ export default function Education() {
     setEducations(educations.filter((ed) => ed.id !== id));
   }
 
-  function updateTitle(id, value) {
+  function handleChange(id, field, value) {
     setEducations(
-      educations.map((ed) => (ed.id === id ? { ...ed, title: value } : ed))
-    );
-  }
-
-  function updateFromDate(id, value) {
-    setEducations(
-      educations.map((ed) => (ed.id === id ? { ...ed, fromDate: value } : ed))
-    );
-  }
-
-  function updateToDate(id, value) {
-    setEducations(
-      educations.map((ed) => (ed.id === id ? { ...ed, toDate: value } : ed))
-    );
-  }
-
-  function updateGrades(id, newGrades) {
-    setEducations(
-      educations.map((ed) => (ed.id === id ? { ...ed, grades: newGrades } : ed))
-    );
-  }
-
-  function updateDescription(id, value) {
-    setEducations(
-      educations.map((ed) =>
-        ed.id === id ? { ...ed, description: value } : ed
-      )
+      educations.map((ed) => (ed.id === id ? { ...ed, [field]: value } : ed))
     );
   }
 
@@ -131,7 +97,7 @@ export default function Education() {
                   type="text"
                   value={ed.title}
                   placeholder="Enter the name of your school/university"
-                  onChange={(e) => updateTitle(ed.id, e.target.value)}
+                  onChange={(e) => handleChange(ed.id, "title", e.target.value)}
                 />
               </label>
 
@@ -141,7 +107,9 @@ export default function Education() {
                   <input
                     type="date"
                     value={ed.fromDate}
-                    onChange={(e) => updateFromDate(ed.id, e.target.value)}
+                    onChange={(e) =>
+                      handleChange(ed.id, "fromDate", e.target.value)
+                    }
                   />
                 </label>
 
@@ -150,14 +118,18 @@ export default function Education() {
                   <input
                     type="date"
                     value={ed.toDate}
-                    onChange={(e) => updateToDate(ed.id, e.target.value)}
+                    onChange={(e) =>
+                      handleChange(ed.id, "toDate", e.target.value)
+                    }
                   />
                 </label>
               </div>
 
               <Grades
                 grades={ed.grades}
-                updateGrades={(newGrades) => updateGrades(ed.id, newGrades)}
+                updateGrades={(newGrades) =>
+                  handleChange(ed.id, "grades", newGrades)
+                }
               />
 
               <label>
@@ -165,7 +137,9 @@ export default function Education() {
                 <textarea
                   value={ed.description}
                   placeholder="Write some additional information about your education..."
-                  onChange={(e) => updateDescription(ed.id, e.target.value)}
+                  onChange={(e) =>
+                    handleChange(ed.id, "description", e.target.value)
+                  }
                 />
               </label>
 

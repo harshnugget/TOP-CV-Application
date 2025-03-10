@@ -8,8 +8,8 @@ export default function ContactInfo() {
     email: "",
   });
 
-  function handleChange(e) {
-    setContact({ ...contact, [e.target.name]: e.target.value });
+  function handleChange(field, value) {
+    setContact({ ...contact, [field]: value });
   }
 
   return (
@@ -22,7 +22,7 @@ export default function ContactInfo() {
           name="firstName"
           placeholder="Enter your first name"
           value={contact.firstName}
-          onChange={handleChange}
+          onChange={(e) => handleChange("firstName", e.target.value)}
         />
       </label>
 
@@ -34,7 +34,7 @@ export default function ContactInfo() {
           name="lastName"
           placeholder="Enter your last name"
           value={contact.lastName}
-          onChange={handleChange}
+          onChange={(e) => handleChange("lastName", e.target.value)}
         />
       </label>
 
@@ -46,7 +46,7 @@ export default function ContactInfo() {
           name="phone"
           placeholder="Enter your phone number"
           value={contact.phone}
-          onChange={handleChange}
+          onChange={(e) => handleChange("phone", e.target.value)}
         />
       </label>
 
@@ -58,7 +58,7 @@ export default function ContactInfo() {
           name="email"
           placeholder="Enter your email address"
           value={contact.email}
-          onChange={handleChange}
+          onChange={(e) => handleChange("email", e.target.value)}
         />
       </label>
     </div>

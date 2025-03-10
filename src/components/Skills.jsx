@@ -11,7 +11,7 @@ export default function Skills() {
     setSkills(skills.filter((skill) => skill.id !== id));
   }
 
-  function updateSkill(id, value) {
+  function handleChange(id, value) {
     setSkills(
       skills.map((skill) =>
         skill.id === id ? { ...skill, title: value } : skill
@@ -35,7 +35,7 @@ export default function Skills() {
                   type="text"
                   value={skill.title}
                   placeholder="Enter the name of a skill"
-                  onChange={(e) => updateSkill(skill.id, e.target.value)}
+                  onChange={(e) => handleChange(skill.id, e.target.value)}
                 />
               </label>
 
