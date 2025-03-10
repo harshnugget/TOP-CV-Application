@@ -1,9 +1,10 @@
+import { useState } from "react";
 import ContactInfo from "./ContactInfo.jsx";
 import Profile from "./Profile.jsx";
 import EmploymentHistory from "./EmploymentHistory.jsx";
 import Education from "./Education.jsx";
 import Skills from "./Skills.jsx";
-import { useState } from "react";
+import CV from "./CV.jsx";
 
 function Form() {
   const [contactInfo, setContactInfo] = useState({
@@ -49,14 +50,13 @@ function Form() {
         </fieldset>
       </form>
 
-      <header>
-        <div className="name-container">
-          <h1 className="first-name">{contactInfo.firstName}</h1>
-          <h1 className="last-name">{contactInfo.lastName}</h1>
-        </div>
-        <p className="phone">{contactInfo.phone}</p>
-        <p className="email">{contactInfo.email}</p>
-      </header>
+      <CV
+        contactInfo={contactInfo}
+        profile={profile}
+        jobs={jobs}
+        educations={educations}
+        skills={skills}
+      />
     </>
   );
 }

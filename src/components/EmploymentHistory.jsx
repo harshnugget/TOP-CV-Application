@@ -56,7 +56,7 @@ export default function EmploymentHistory({ jobs, setJobs }) {
       ...jobs,
       {
         id: crypto.randomUUID(),
-        occupation: "",
+        title: "",
         fromDate: "",
         toDate: "",
         description: "",
@@ -86,11 +86,11 @@ export default function EmploymentHistory({ jobs, setJobs }) {
           <li key={job.id}>
             <fieldset>
               <label>
-                Occupation:{" "}
+                Title:{" "}
                 <input
                   type="text"
-                  value={job.occupation}
-                  placeholder="Enter the title of your occupation"
+                  value={job.title}
+                  placeholder="Enter the title of your job"
                   onChange={(e) =>
                     handleChange(job.id, "title", e.target.value)
                   }
