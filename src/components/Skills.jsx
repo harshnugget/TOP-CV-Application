@@ -1,8 +1,4 @@
-import { useState } from "react";
-
-export default function Skills() {
-  const [skills, setSkills] = useState([]);
-
+export default function Skills({ skills, setSkills }) {
   function addSkill() {
     setSkills([...skills, { id: crypto.randomUUID(), title: "" }]);
   }

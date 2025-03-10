@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 function Responsibilities({ responsibilities, updateResponsibilities }) {
   function addResponsibility() {
     updateResponsibilities([
@@ -52,12 +50,10 @@ function Responsibilities({ responsibilities, updateResponsibilities }) {
   );
 }
 
-export default function EmploymentHistory() {
-  const [history, setHistory] = useState([]);
-
-  function addHistory() {
-    setHistory([
-      ...history,
+export default function EmploymentHistory({ jobs, setJobs }) {
+  function addjobs() {
+    setJobs([
+      ...jobs,
       {
         id: crypto.randomUUID(),
         occupation: "",
@@ -69,34 +65,34 @@ export default function EmploymentHistory() {
     ]);
   }
 
-  function removeHistory(id) {
-    setHistory(history.filter((emp) => emp.id !== id));
+  function removejobs(id) {
+    setJobs(jobs.filter((job) => job.id !== id));
   }
 
   function handleChange(id, field, value) {
-    setHistory(
-      history.map((emp) => (emp.id === id ? { ...emp, [field]: value } : emp))
+    setJobs(
+      jobs.map((job) => (job.id === id ? { ...job, [field]: value } : job))
     );
   }
 
   return (
-    <div className="employment-history">
-      <button type="button" className="add-btn" onClick={addHistory}>
+    <div className="employment-jobs">
+      <button type="button" className="add-btn" onClick={addjobs}>
         Add Employment
       </button>
 
       <ul>
-        {history.map((emp) => (
-          <li key={emp.id}>
+        {jobs.map((job) => (
+          <li key={job.id}>
             <fieldset>
               <label>
                 Occupation:{" "}
                 <input
                   type="text"
-                  value={emp.occupation}
+                  value={job.occupation}
                   placeholder="Enter the title of your occupation"
                   onChange={(e) =>
-                    handleChange(emp.id, "title", e.target.value)
+                    handleChange(job.id, "title", e.target.value)
                   }
                 />
               </label>
@@ -106,9 +102,9 @@ export default function EmploymentHistory() {
                   From:{" "}
                   <input
                     type="date"
-                    value={emp.fromDate}
+                    value={job.fromDate}
                     onChange={(e) =>
-                      handleChange(emp.id, "fromDate", e.target.value)
+                      handleChange(job.id, "fromDate", e.target.value)
                     }
                   />
                 </label>
@@ -117,28 +113,28 @@ export default function EmploymentHistory() {
                   To:{" "}
                   <input
                     type="date"
-                    value={emp.toDate}
+                    value={job.toDate}
                     onChange={(e) =>
-                      handleChange(emp.id, "toDate", e.target.value)
+                      handleChange(job.id, "toDate", e.target.value)
                     }
                   />
                 </label>
               </div>
 
               <Responsibilities
-                responsibilities={emp.responsibilities}
+                responsibilities={job.responsibilities}
                 updateResponsibilities={(newResponsibilities) =>
-                  handleChange(emp.id, "responsibilities", newResponsibilities)
+                  handleChange(job.id, "responsibilities", newResponsibilities)
                 }
               />
 
               <label>
                 Description:{" "}
                 <textarea
-                  value={emp.description}
+                  value={job.description}
                   placeholder="Write some additional information about your job..."
                   onChange={(e) =>
-                    handleChange(emp.id, "description", e.target.value)
+                    handleChange(job.id, "description", e.target.value)
                   }
                 />
               </label>
@@ -147,7 +143,7 @@ export default function EmploymentHistory() {
                 <button
                   type="button"
                   className="remove-btn"
-                  onClick={() => removeHistory(emp.id)}
+                  onClick={() => removejobs(job.id)}
                 >
                   Remove Employment
                 </button>

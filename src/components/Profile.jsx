@@ -1,12 +1,7 @@
-import { useState } from "react";
-
-export default function Profile() {
-  const [profile, setProfile] = useState("");
-
+export default function Profile({ profile, setProfile }) {
   return (
     <div>
       <label htmlFor="profile">
-        Profile:{" "}
         <textarea
           id="profile"
           name="profile"

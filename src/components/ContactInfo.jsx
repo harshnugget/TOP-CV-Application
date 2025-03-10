@@ -1,15 +1,6 @@
-import { useState } from "react";
-
-export default function ContactInfo() {
-  const [contact, setContact] = useState({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    email: "",
-  });
-
+export default function ContactInfo({ contactInfo, setContactInfo }) {
   function handleChange(field, value) {
-    setContact({ ...contact, [field]: value });
+    setContactInfo({ ...contactInfo, [field]: value });
   }
 
   return (
@@ -21,7 +12,7 @@ export default function ContactInfo() {
           id="fname"
           name="firstName"
           placeholder="Enter your first name"
-          value={contact.firstName}
+          value={contactInfo.firstName}
           onChange={(e) => handleChange("firstName", e.target.value)}
         />
       </label>
@@ -33,7 +24,7 @@ export default function ContactInfo() {
           id="lname"
           name="lastName"
           placeholder="Enter your last name"
-          value={contact.lastName}
+          value={contactInfo.lastName}
           onChange={(e) => handleChange("lastName", e.target.value)}
         />
       </label>
@@ -45,7 +36,7 @@ export default function ContactInfo() {
           id="phone"
           name="phone"
           placeholder="Enter your phone number"
-          value={contact.phone}
+          value={contactInfo.phone}
           onChange={(e) => handleChange("phone", e.target.value)}
         />
       </label>
@@ -57,7 +48,7 @@ export default function ContactInfo() {
           id="email"
           name="email"
           placeholder="Enter your email address"
-          value={contact.email}
+          value={contactInfo.email}
           onChange={(e) => handleChange("email", e.target.value)}
         />
       </label>

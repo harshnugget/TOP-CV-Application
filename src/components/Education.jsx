@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 function Grades({ grades, updateGrades }) {
   function addGrade() {
     updateGrades([
@@ -54,9 +52,7 @@ function Grades({ grades, updateGrades }) {
   );
 }
 
-export default function Education() {
-  const [educations, setEducations] = useState([]);
-
+export default function Education({ educations, setEducations }) {
   function addEducation() {
     setEducations([
       ...educations,
