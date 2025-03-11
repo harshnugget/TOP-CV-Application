@@ -61,8 +61,8 @@ export default function Education({ educations, setEducations }) {
         title: "",
         fromDate: "",
         toDate: "",
-        grades: [],
         description: "",
+        grades: [],
       },
     ]);
   }

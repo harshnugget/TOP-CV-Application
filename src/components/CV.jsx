@@ -25,8 +25,9 @@ export default function CV({ contactInfo, profile, jobs, educations, skills }) {
                 <div className="job">
                   <h3>{job.title}</h3>
                   <p className="date">
-                    {job.fromDate} {job.fromDate && job.toDate && "-"}{" "}
-                    {job.toDate}
+                    {job.fromDate}{" "}
+                    {job.fromDate && (job.toDate || job.toCurrent) && "-"}{" "}
+                    {job.toCurrent ? "Current" : job.toDate}
                   </p>
                   <h4>
                     {job.responsibilities.length > 0 && "Responsibilities"}

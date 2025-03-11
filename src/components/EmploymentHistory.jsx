@@ -114,10 +114,21 @@ export default function EmploymentHistory({ jobs, setJobs }) {
                   <input
                     type="date"
                     value={job.toDate}
-                    onChange={(e) =>
-                      handleChange(job.id, "toDate", e.target.value)
-                    }
+                    disabled={job.toCurrent}
+                    onChange={(e) => {
+                      handleChange(job.id, "toDate", e.target.value);
+                    }}
                   />
+                </label>
+
+                <label>
+                  <input
+                    type="checkbox"
+                    onChange={(e) => {
+                      handleChange(job.id, "toCurrent", e.target.checked);
+                    }}
+                  />
+                  Current
                 </label>
               </div>
 
