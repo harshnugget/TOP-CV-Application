@@ -24,7 +24,7 @@ function Grades({ grades, updateGrades }) {
         Add Grade
       </button>
 
-      <ul>
+      <ul style={{ listStyleType: "none" }}>
         {grades.map((grade) => (
           <li key={grade.id}>
             Grade:{" "}
@@ -83,7 +83,7 @@ export default function Education({ educations, setEducations }) {
         Add Education
       </button>
 
-      <ul>
+      <ul style={{ listStyleType: "none" }}>
         {educations.map((ed) => (
           <li key={ed.id}>
             <fieldset>

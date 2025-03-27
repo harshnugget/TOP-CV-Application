@@ -7,7 +7,7 @@ import Skills from "./Skills.jsx";
 function Form({ formData, updateFormData }) {
   return (
     <>
-      <form>
+      <form id="cv-form">
         <fieldset>
           <legend>Contact Information</legend>
           <ContactInfo

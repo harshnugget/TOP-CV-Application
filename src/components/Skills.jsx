@@ -21,7 +21,7 @@ export default function Skills({ skills, setSkills }) {
         Add Skill
       </button>
 
-      <ul>
+      <ul style={{ listStyleType: "none" }}>
         {skills.map((skill) => (
           <li key={skill.id}>
             <fieldset>

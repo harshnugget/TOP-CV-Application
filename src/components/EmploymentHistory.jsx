@@ -24,7 +24,7 @@ function Responsibilities({ responsibilities, updateResponsibilities }) {
         Add Responsibility
       </button>
 
-      <ul>
+      <ul style={{ listStyleType: "none" }}>
         {responsibilities.map((resp) => (
           <li key={resp.id}>
             <label>
@@ -81,7 +81,7 @@ export default function EmploymentHistory({ jobs, setJobs }) {
         Add Employment
       </button>
 
-      <ul>
+      <ul style={{ listStyleType: "none" }}>
         {jobs.map((job) => (
           <li key={job.id}>
             <fieldset>
