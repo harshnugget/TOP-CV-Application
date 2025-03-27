@@ -24,20 +24,30 @@ function Grades({ grades, updateGrades }) {
         Add Grade
       </button>
 
-      <ul style={{ listStyleType: "none" }}>
+      <ul className="grades-list" style={{ listStyleType: "none" }}>
         {grades.map((grade) => (
           <li key={grade.id}>
             Grade:{" "}
-            <input
-              type="text"
-              value={grade.title}
-              onChange={(e) => handleChange(grade.id, "title", e.target.value)}
-            />
-            <input
-              type="text"
-              value={grade.score}
-              onChange={(e) => handleChange(grade.id, "score", e.target.value)}
-            />
+            <div className="grade-container">
+              <input
+                className="grade-title"
+                type="text"
+                value={grade.title}
+                placeholder="Subject"
+                onChange={(e) =>
+                  handleChange(grade.id, "title", e.target.value)
+                }
+              />
+              <input
+                className="grade-score"
+                type="text"
+                value={grade.score}
+                placeholder="Score"
+                onChange={(e) =>
+                  handleChange(grade.id, "score", e.target.value)
+                }
+              />
+            </div>
             <button
               type="button"
               className="remove-btn"
@@ -139,7 +149,7 @@ export default function Education({ educations, setEducations }) {
                 />
               </label>
 
-              <div>
+              <div className="remove-btn-container">
                 <button
                   type="button"
                   className="remove-btn"

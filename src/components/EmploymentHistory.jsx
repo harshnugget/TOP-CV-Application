@@ -24,7 +24,7 @@ function Responsibilities({ responsibilities, updateResponsibilities }) {
         Add Responsibility
       </button>
 
-      <ul style={{ listStyleType: "none" }}>
+      <ul className="responsibility-list" style={{ listStyleType: "none" }}>
         {responsibilities.map((resp) => (
           <li key={resp.id}>
             <label>
@@ -32,6 +32,7 @@ function Responsibilities({ responsibilities, updateResponsibilities }) {
               <input
                 type="text"
                 value={resp.title}
+                placeholder="Enter a responsibility"
                 onChange={(e) => handleChange(resp.id, e.target.value)}
               />
             </label>
@@ -121,7 +122,7 @@ export default function EmploymentHistory({ jobs, setJobs }) {
                   />
                 </label>
 
-                <label>
+                <label className="current-checkbox">
                   <input
                     type="checkbox"
                     onChange={(e) => {
@@ -150,7 +151,7 @@ export default function EmploymentHistory({ jobs, setJobs }) {
                 />
               </label>
 
-              <div>
+              <div className="remove-btn-container">
                 <button
                   type="button"
                   className="remove-btn"

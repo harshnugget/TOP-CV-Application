@@ -21,7 +21,7 @@ export default function Skills({ skills, setSkills }) {
         Add Skill
       </button>
 
-      <ul style={{ listStyleType: "none" }}>
+      <ul className="skills-list" style={{ listStyleType: "none" }}>
         {skills.map((skill) => (
           <li key={skill.id}>
             <fieldset>
@@ -30,7 +30,7 @@ export default function Skills({ skills, setSkills }) {
                 <input
                   type="text"
                   value={skill.title}
-                  placeholder="Enter the name of a skill"
+                  placeholder="Enter a skill"
                   onChange={(e) => handleChange(skill.id, e.target.value)}
                 />
               </label>

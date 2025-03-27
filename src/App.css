@@ -15,7 +15,7 @@
   padding: 2rem;
   text-align: center;
   display: grid;
-  grid-template-columns: 350px 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 4rem;
 }
 
@@ -23,17 +23,54 @@
 #cv-form {
   text-align: left;
   margin-top: 5rem;
+  max-width: max(350px, fit-content);
 }
-
-#cv-form .contact-info {
+#cv-form textarea {
+  resize: none;
+}
+#cv-form #profile {
+  height: 60px;
+}
+#cv-form label {
   display: flex;
   flex-direction: column;
 }
+#cv-form .dates {
+  display: flex;
+}
+#cv-form .current-checkbox {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+}
+#cv-form button {
+  margin: 10px;
+  margin-left: 0;
+}
+#cv-form .add-btn {
+  background-color: green;
+}
+#cv-form .remove-btn {
+  background-color: firebrick;
+}
+#cv-form .remove-btn-container {
+  display: flex;
+  justify-content: end;
+}
+#cv-form .responsibility-list,
+#cv-form .grades-list {
+  margin-left: 1rem;
+}
+#cv-form .grade-container {
+  display: flex;
+  gap: 6px;
+}
 
-/* CV Container */
+/* CV */
 #cv-container {
   width: 640px;
   min-height: calc(640px * 1.414);
+  max-height: fit-content;
   display: flex;
   flex-direction: column;
   padding: 3rem;
@@ -99,6 +136,10 @@
 #cv-container .name-container .last-name {
   color: var(--primary-color);
   padding: 0;
+}
+
+#cv-container .name-container .first-name::after {
+  content: "\00A0";
 }
 
 /* Dates */
