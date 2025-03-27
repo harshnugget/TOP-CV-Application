@@ -1,4 +1,6 @@
-export default function CV({ contactInfo, profile, jobs, educations, skills }) {
+export default function CV({ cvData }) {
+  const { contactInfo, profile, jobs, educations, skills } = cvData;
+
   return (
     <>
       <header>

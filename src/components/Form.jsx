@@ -1,62 +1,55 @@
-import { useState } from "react";
 import ContactInfo from "./ContactInfo.jsx";
 import Profile from "./Profile.jsx";
 import EmploymentHistory from "./EmploymentHistory.jsx";
 import Education from "./Education.jsx";
 import Skills from "./Skills.jsx";
-import CV from "./CV.jsx";
 
-function Form() {
-  const [contactInfo, setContactInfo] = useState({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    email: "",
-  });
-  const [profile, setProfile] = useState("");
-  const [jobs, setJobs] = useState([]);
-  const [educations, setEducations] = useState([]);
-  const [skills, setSkills] = useState([]);
-
+function Form({ formData, updateFormData }) {
   return (
     <>
       <form>
         <fieldset>
           <legend>Contact Information</legend>
           <ContactInfo
-            contactInfo={contactInfo}
-            setContactInfo={setContactInfo}
+            contactInfo={formData.contactInfo}
+            setContactInfo={(formData) =>
+              updateFormData("contactInfo", formData)
+            }
           />
         </fieldset>
 
         <fieldset>
           <legend>Profile</legend>
-          <Profile profile={profile} setProfile={setProfile} />
+          <Profile
+            profile={formData.profile}
+            setProfile={(formData) => updateFormData("profile", formData)}
+          />
         </fieldset>
 
         <fieldset>
           <legend>Employment History</legend>
-          <EmploymentHistory jobs={jobs} setJobs={setJobs} />
+          <EmploymentHistory
+            jobs={formData.jobs}
+            setJobs={(formData) => updateFormData("jobs", formData)}
+          />
         </fieldset>
 
         <fieldset>
           <legend>Education</legend>
-          <Education educations={educations} setEducations={setEducations} />
+          <Education
+            educations={formData.educations}
+            setEducations={(formData) => updateFormData("educations", formData)}
+          />
         </fieldset>
 
         <fieldset>
           <legend>Skills</legend>
-          <Skills skills={skills} setSkills={setSkills} />
+          <Skills
+            skills={formData.skills}
+            setSkills={(formData) => updateFormData("skills", formData)}
+          />
         </fieldset>
       </form>
-
-      <CV
-        contactInfo={contactInfo}
-        profile={profile}
-        jobs={jobs}
-        educations={educations}
-        skills={skills}
-      />
     </>
   );
 }
