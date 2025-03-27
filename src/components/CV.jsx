@@ -14,7 +14,7 @@ function ContactInfo({ firstName, lastName, phone, email }) {
 
 function Profile({ summary }) {
   return (
-    <div className="profile">
+    <div className="profile-container">
       <h2>Profile</h2>
       <p className="summary">{summary}</p>
     </div>
@@ -56,7 +56,7 @@ function Education({ educations = [] }) {
   return (
     <div className="education-container">
       <h2>Education</h2>
-      <ul style={{ listStyleType: "none" }}>
+      <ul className="education-list" style={{ listStyleType: "none" }}>
         {educations.map((education) => (
           <li key={education.id}>
             <div className="education">

@@ -15,9 +15,9 @@ body {
   justify-content: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: rgb(233, 233, 233);
 }
 
-p,
 h1,
 h2,
 h3,
@@ -35,4 +35,6 @@ p {
   word-wrap: break-word;
   word-break: break-word;
   line-height: initial;
+  margin: 0;
+  padding: 0.5rem;
 }
