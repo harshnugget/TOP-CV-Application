@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Form from "./components/Form";
 import CV from "./components/CV";
-import "./App.css";
+// import "./App.css";
 
 function App() {
   const [data, setData] = useState({
