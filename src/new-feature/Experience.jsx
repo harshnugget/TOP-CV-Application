@@ -1,6 +1,7 @@
 import { useState } from "react";
 import EditableField from "./EditableField";
 import EditableFieldToggle from "./EditableFieldToggle";
+import DateField from "./DateField";
 
 function Responsibility({ id, removeResponsibility }) {
   function getData({ event, value }) {
@@ -39,18 +40,20 @@ function Responsibilities({ style }) {
   }
 
   return (
-    <ul className="responsibilities" style={style}>
-      {responsibilities.map((responsibility) => (
-        <Responsibility
-          key={responsibility.id}
-          id={responsibility.id}
-          removeResponsibility={removeResponsibility}
-        />
-      ))}
+    <>
+      <ul className="responsibilities" style={style}>
+        {responsibilities.map((responsibility) => (
+          <Responsibility
+            key={responsibility.id}
+            id={responsibility.id}
+            removeResponsibility={removeResponsibility}
+          />
+        ))}
+      </ul>
       <button type="button" onClick={addResponsibility}>
         Add responsibility
       </button>
-    </ul>
+    </>
   );
 }
 
@@ -70,6 +73,7 @@ function Job({ id, removeJob }) {
         multiLine={false}
         callbackFunc={getData}
       />
+      <DateField />
       <Responsibilities style={{ paddingLeft: "20px" }} />
       <EditableFieldToggle
         buttonText="Add description"
@@ -93,13 +97,15 @@ export default function Experience({ style }) {
   }
 
   return (
-    <ul className="experience" style={style}>
-      {experience.map((job) => (
-        <Job key={job.id} id={job.id} removeJob={removeJob} />
-      ))}
+    <>
+      <ul className="experience" style={style}>
+        {experience.map((job) => (
+          <Job key={job.id} id={job.id} removeJob={removeJob} />
+        ))}
+      </ul>
       <button type="button" onClick={addJob}>
         Add job
       </button>
-    </ul>
+    </>
   );
 }
