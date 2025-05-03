@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Name, Email, Phone } from "./ContactDetails";
 import Skills from "./Skills";
+import Experience from "./Experience";
 
 const defaultGrid = `
   "name name"
@@ -44,6 +45,20 @@ export default function Page({ gridAreaLayout = defaultGrid }) {
         </div>
         <div className="skills-content" style={{ gridArea: "skills-content" }}>
           <Skills style={{ display: "block", gridArea: "skills-content" }} />
+        </div>
+        <div
+          className="experience-header"
+          style={{ gridArea: "experience-header" }}
+        >
+          Experience
+        </div>
+        <div
+          className="experience-content"
+          style={{ gridArea: "experience-content" }}
+        >
+          <Experience
+            style={{ display: "block", gridArea: "experience-content" }}
+          />
         </div>
       </div>
     </>
