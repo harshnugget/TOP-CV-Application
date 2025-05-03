@@ -87,13 +87,13 @@ export default function Page() {
   const pageInset = Math.round(width / 30);
 
   const gridArea = `
-  "name name"
-  "email email"
-  "phone phone"
-  "skills-header skills-content"
-  "experience-header experience-content"
-  "education-header education-content"
-  `;
+      "name name"
+      "email email"
+      "phone phone"
+      "skills-header skills-content"
+      "experience-header experience-content"
+      "education-header education-content"
+    `;
 
   const styles = {
     boxSizing: "border-box",
