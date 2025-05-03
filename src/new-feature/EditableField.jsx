@@ -18,7 +18,7 @@ import { useState } from "react";
 export default function EditableField({
   defaultPlaceholderText = "Default text",
   editPlaceholderText = "Enter some text...",
-  style,
+  customStyles,
   editMode = true,
   multiLine = true,
   callbackFunc,
@@ -27,11 +27,11 @@ export default function EditableField({
   const [_hovered, setHovered] = useState(false);
   const [_value, setValue] = useState("");
 
-  const _style = {
+  const _customStyles = {
     textAreaBg: "aliceBlue",
     spanDefaultBg: "transparent",
     spanHoverBg: "rgb(211,211,211)",
-    ...style,
+    ...customStyles,
   };
 
   const divStyles = {
@@ -48,7 +48,7 @@ export default function EditableField({
     width: "100%",
     height: "100%",
     resize: "none",
-    backgroundColor: _style.textAreaBg,
+    backgroundColor: _customStyles.textAreaBg,
     border: "none",
     outline: "none",
     overflow: "hidden",
@@ -60,7 +60,9 @@ export default function EditableField({
 
   const spanStyles = {
     visibility: _editMode ? "hidden" : "visible",
-    backgroundColor: _hovered ? _style.spanHoverBg : _style.spanDefaultBg,
+    backgroundColor: _hovered
+      ? _customStyles.spanHoverBg
+      : _customStyles.spanDefaultBg,
   };
 
   const sharedStyles = {
@@ -80,11 +82,7 @@ export default function EditableField({
       value: _value,
     };
 
-    //  If edit mode is off
     switch (e.type) {
-      case "click":
-        setEditMode(true);
-        break;
       case "mouseover":
         setHovered(true);
         break;
@@ -93,23 +91,32 @@ export default function EditableField({
         break;
     }
 
-    //  If edit mode is on
-    switch (e.type) {
-      case "blur":
-        setEditMode(false);
-        states.editMode = false;
-        break;
-      case "keydown":
-        if (e.key === "Enter" && (!e.shiftKey || !multiLine)) {
-          // Prevent newline if Shift is NOT held or multiline is false
-          e.preventDefault();
-          e.target.blur();
-        }
-        break;
-      case "change":
-        setValue(e.target.value);
-        states.value = e.target.value;
-        break;
+    if (!_editMode) {
+      switch (e.type) {
+        case "click":
+          setEditMode(true);
+          break;
+      }
+    }
+
+    if (_editMode) {
+      switch (e.type) {
+        case "blur":
+          setEditMode(false);
+          states.editMode = false;
+          break;
+        case "keydown":
+          if (e.key === "Enter" && (!e.shiftKey || !multiLine)) {
+            // Prevent newline if Shift is NOT held or multiline is false
+            e.preventDefault();
+            e.target.blur();
+          }
+          break;
+        case "change":
+          setValue(e.target.value);
+          states.value = e.target.value;
+          break;
+      }
     }
 
     // Send state and event data to callback function
@@ -127,13 +134,13 @@ export default function EditableField({
       onMouseLeave={eventHandler}
     >
       <textarea
+        autoFocus={_editMode}
         className={`editable-field__textarea ${
           _editMode ? `editable-field__textarea--active` : ""
         }`}
         style={{ ...textAreaStyles, ...sharedStyles }}
         value={_value}
         placeholder={editPlaceholderText}
-        autoFocus={_editMode}
         onChange={eventHandler}
         onBlur={eventHandler}
         onKeyDown={eventHandler}
