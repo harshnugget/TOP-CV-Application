@@ -24,6 +24,7 @@ export default function EditableField({
     spanHoverBg: "rgb(211,211,211)",
   },
   editMode = true,
+  multiLine = true,
   callbackFunc,
 }) {
   const [_editMode, setEditMode] = useState(editMode);
@@ -106,8 +107,8 @@ export default function EditableField({
         setEditMode(false);
         break;
       case "keydown":
-        if (e.key === "Enter" && !e.shiftKey) {
-          // Prevent newline if Shift is NOT held
+        if (e.key === "Enter" && (!e.shiftKey || !multiLine)) {
+          // Prevent newline if Shift is NOT held or multiline is false
           e.preventDefault();
           setEditMode(false);
         }
