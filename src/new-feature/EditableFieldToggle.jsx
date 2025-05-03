@@ -6,6 +6,7 @@ export default function EditableFieldToggle({
   editPlaceholderText = "Enter some text...",
   editMode = false,
   multiLine = false,
+  style,
 }) {
   const [showButton, setShowButton] = useState(!editMode);
 
@@ -16,7 +17,7 @@ export default function EditableFieldToggle({
   }
 
   return (
-    <div className="editable-field-toggle">
+    <div className="editable-field-toggle" style={style}>
       {showButton ? (
         <button type="button" onClick={() => setShowButton(false)}>
           {buttonText}

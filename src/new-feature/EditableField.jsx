@@ -18,7 +18,7 @@ import { useState } from "react";
 export default function EditableField({
   defaultPlaceholderText = "Default text",
   editPlaceholderText = "Enter some text...",
-  styles,
+  style,
   editMode = true,
   multiLine = true,
   callbackFunc,
@@ -27,11 +27,11 @@ export default function EditableField({
   const [_hovered, setHovered] = useState(false);
   const [_value, setValue] = useState("");
 
-  const _styles = {
+  const _style = {
     textAreaBg: "aliceBlue",
     spanDefaultBg: "transparent",
     spanHoverBg: "rgb(211,211,211)",
-    ...styles,
+    ...style,
   };
 
   const divStyles = {
@@ -48,7 +48,7 @@ export default function EditableField({
     width: "100%",
     height: "100%",
     resize: "none",
-    backgroundColor: _styles.textAreaBg,
+    backgroundColor: _style.textAreaBg,
     border: "none",
     outline: "none",
     overflow: "hidden",
@@ -60,7 +60,7 @@ export default function EditableField({
 
   const spanStyles = {
     visibility: _editMode ? "hidden" : "visible",
-    backgroundColor: _hovered ? _styles.spanHoverBg : _styles.spanDefaultBg,
+    backgroundColor: _hovered ? _style.spanHoverBg : _style.spanDefaultBg,
   };
 
   const sharedStyles = {
