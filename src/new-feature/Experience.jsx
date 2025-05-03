@@ -1,6 +1,6 @@
 import { useState } from "react";
 import EditableField from "./EditableField";
-import Description from "./Description";
+import EditableFieldToggle from "./EditableFieldToggle";
 
 function Responsibility({ id, removeResponsibility }) {
   function getData({ event, value }) {
@@ -71,7 +71,12 @@ function Job({ id, removeJob }) {
         callbackFunc={getData}
       />
       <Responsibilities style={{ paddingLeft: "20px" }} />
-      <Description />
+      <EditableFieldToggle
+        buttonText="Add description"
+        editPlaceholderText="Enter a description"
+        editMode={false}
+        multiLine={true}
+      />
     </li>
   );
 }
