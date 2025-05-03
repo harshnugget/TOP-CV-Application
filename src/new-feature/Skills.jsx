@@ -33,13 +33,13 @@ export default function Skills({ style }) {
   }
 
   return (
-    <div className="skills" style={style}>
+    <ul className="skills" style={style}>
       {skills.map((skill) => (
         <Skill key={skill.id} id={skill.id} removeSkill={removeSkill} />
       ))}
       <button type="button" onClick={addSkill}>
         Add skill
       </button>
-    </div>
+    </ul>
   );
 }
