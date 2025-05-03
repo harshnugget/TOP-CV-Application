@@ -69,23 +69,14 @@ export default function EditableField({
     padding: "2px",
   };
 
-  // Send event and state handling to callback function
-  function callback(event) {
-    if (callbackFunc) {
-      setTimeout(() => {
-        callbackFunc({
-          event: event,
-          editMode: _editMode,
-          hovered: _hovered,
-          value: _value,
-          setValue,
-          setEditMode,
-        });
-      }, 0);
-    }
-  }
+  function eventHandler(e) {
+    const states = {
+      editMode: _editMode,
+      hovered: _hovered,
+      value: _value,
+    };
 
-  function labelEventHandler(e) {
+    //  If edit mode is off
     switch (e.type) {
       case "click":
         setEditMode(true);
@@ -98,36 +89,38 @@ export default function EditableField({
         break;
     }
 
-    callback(e);
-  }
-
-  function textAreaEventHandler(e) {
+    //  If edit mode is on
     switch (e.type) {
       case "blur":
         setEditMode(false);
+        states.editMode = false;
         break;
       case "keydown":
         if (e.key === "Enter" && (!e.shiftKey || !multiLine)) {
           // Prevent newline if Shift is NOT held or multiline is false
           e.preventDefault();
-          setEditMode(false);
+          e.target.blur();
         }
         break;
       case "change":
         setValue(e.target.value);
+        states.value = e.target.value;
         break;
     }
 
-    callback(e);
+    // Send state and event data to callback function
+    if (callbackFunc && typeof callbackFunc === "function") {
+      callbackFunc({ ...states, event: e });
+    }
   }
 
   return (
     <div
       className="editable-field"
       style={divStyles}
-      onClick={labelEventHandler}
-      onMouseOver={labelEventHandler}
-      onMouseLeave={labelEventHandler}
+      onClick={eventHandler}
+      onMouseOver={eventHandler}
+      onMouseLeave={eventHandler}
     >
       <textarea
         className={`editable-field__textarea ${
@@ -137,9 +130,9 @@ export default function EditableField({
         value={_value}
         placeholder={editPlaceholderText}
         autoFocus={_editMode}
-        onChange={textAreaEventHandler}
-        onBlur={textAreaEventHandler}
-        onKeyDown={textAreaEventHandler}
+        onChange={eventHandler}
+        onBlur={eventHandler}
+        onKeyDown={eventHandler}
       />
       <span
         className={`editable-field__span ${
