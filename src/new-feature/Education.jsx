@@ -1,6 +1,7 @@
 import { useState } from "react";
 import EditableField from "./EditableField";
 import EditableFieldToggle from "./EditableFieldToggle";
+import DateField from "./DateField";
 
 function Subject({ id, removeSubject }) {
   const [separator, setSeparator] = useState(false);
@@ -23,22 +24,24 @@ function Subject({ id, removeSubject }) {
 
   return (
     <li className="subject">
-      <EditableField
-        defaultPlaceholderText="Subject"
-        editPlaceholderText="Enter a subject..."
-        editMode={true}
-        multiLine={false}
-        callbackFunc={getData}
-      />
-      {separator && <span>-</span>}
-      <EditableFieldToggle
-        buttonText="Add grade"
-        editPlaceholderText="Enter a grade..."
-        editMode={false}
-        multiLine={true}
-        style={{ display: "inline-block" }}
-        callbackFunc={addSeparator}
-      />
+      <div style={{ display: "flex" }}>
+        <EditableField
+          defaultPlaceholderText="Subject"
+          editPlaceholderText="Enter a subject..."
+          editMode={true}
+          multiLine={false}
+          callbackFunc={getData}
+        />
+        {separator && <span>-</span>}
+        <EditableFieldToggle
+          buttonText="Add grade"
+          editPlaceholderText="Enter a grade..."
+          editMode={false}
+          multiLine={true}
+          callbackFunc={addSeparator}
+        />
+        <DateField />
+      </div>
     </li>
   );
 }
@@ -55,18 +58,20 @@ function Subjects({ style }) {
   }
 
   return (
-    <ul className="subjects" style={style}>
-      {subjects.map((subject) => (
-        <Subject
-          key={subject.id}
-          id={subject.id}
-          removeSubject={removeSubject}
-        />
-      ))}
+    <>
+      <ul className="subjects" style={style}>
+        {subjects.map((subject) => (
+          <Subject
+            key={subject.id}
+            id={subject.id}
+            removeSubject={removeSubject}
+          />
+        ))}
+      </ul>
       <button type="button" onClick={addSubject}>
         Add subject
       </button>
-    </ul>
+    </>
   );
 }
 
@@ -86,6 +91,7 @@ function Institution({ id, removeInstitution }) {
         multiLine={false}
         callbackFunc={getData}
       />
+      <DateField />
       <Subjects style={{ paddingLeft: "20px" }} />
       <EditableFieldToggle
         buttonText="Add description"
@@ -109,17 +115,19 @@ export default function Education({ style }) {
   }
 
   return (
-    <ul className="institution" style={style}>
-      {institutions.map((institution) => (
-        <Institution
-          key={institution.id}
-          id={institution.id}
-          removeInstitution={removeInstitution}
-        />
-      ))}
+    <>
+      <ul className="institution" style={style}>
+        {institutions.map((institution) => (
+          <Institution
+            key={institution.id}
+            id={institution.id}
+            removeInstitution={removeInstitution}
+          />
+        ))}
+      </ul>
       <button type="button" onClick={addInstitution}>
         Add institution
       </button>
-    </ul>
+    </>
   );
 }
