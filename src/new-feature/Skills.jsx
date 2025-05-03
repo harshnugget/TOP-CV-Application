@@ -9,17 +9,7 @@ function Skill({ id, removeSkill }) {
   }
 
   return (
-    <li className="skill" style={{ display: "flex" }}>
-      <span
-        className="list-bullet"
-        style={{
-          fontSize: "1.6rem",
-          lineHeight: "1.6rem",
-          paddingRight: "10px",
-        }}
-      >
-        •
-      </span>
+    <li className="skill">
       <EditableField
         defaultPlaceholderText="Skill"
         editPlaceholderText="Enter a skill..."
