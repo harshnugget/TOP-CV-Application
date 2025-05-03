@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Name, Email, Phone } from "./ContactDetails";
+import Skills from "./Skills";
 
 const defaultGrid = `
   "name name"
@@ -38,6 +39,12 @@ export default function Page({ gridAreaLayout = defaultGrid }) {
         <Name style={{ display: "flex", gridArea: "name" }} />
         <Email style={{ display: "flex", gridArea: "email" }} />
         <Phone style={{ display: "flex", gridArea: "phone" }} />
+        <div className="skills-header" style={{ gridArea: "skills-header" }}>
+          Skills
+        </div>
+        <div className="skills-content" style={{ gridArea: "skills-content" }}>
+          <Skills style={{ display: "block", gridArea: "skills-content" }} />
+        </div>
       </div>
     </>
   );
