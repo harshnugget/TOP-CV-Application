@@ -7,12 +7,17 @@ export default function EditableFieldToggle({
   editMode = false,
   multiLine = false,
   style,
+  callbackFunc,
 }) {
   const [showButton, setShowButton] = useState(!editMode);
 
   function getData({ event, value }) {
     if (event.type === "blur" && !value) {
       setShowButton(true);
+    }
+
+    if (callbackFunc && typeof callbackFunc === "function") {
+      callbackFunc({ event, value });
     }
   }
 
