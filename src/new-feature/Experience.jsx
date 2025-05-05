@@ -3,10 +3,12 @@ import EditableField from "./EditableField";
 import EditableFieldToggle from "./EditableFieldToggle";
 import DateField from "./DateField";
 
-function Responsibility({ id, removeResponsibility }) {
-  function getData({ event, value }) {
+function Responsibility({ removeResponsibility, updateResponsibility }) {
+  function getTitleData({ event, value }) {
     if (event.type === "blur" && !value) {
-      removeResponsibility(id);
+      removeResponsibility();
+    } else if (event.type === "change") {
+      updateResponsibility({ title: value });
     }
   }
 
@@ -17,50 +19,62 @@ function Responsibility({ id, removeResponsibility }) {
         editPlaceholderText="Enter a responsibility..."
         editMode={true}
         multiLine={false}
-        callbackFunc={getData}
+        callbackFunc={getTitleData}
       />
     </li>
   );
 }
 
-function Responsibilities({ style }) {
-  const [responsibilities, setResponsibilities] = useState([]);
+function Job({ job, removeJob, updateJob }) {
+  const [active, setActive] = useState(false);
+  const { responsibilities } = job;
+
+  function getTitleData({ event, value }) {
+    if (event.type === "blur") {
+      if (!value) {
+        removeJob();
+      } else if (!active) {
+        setActive(true);
+      }
+    } else if (event.type === "change") {
+      updateJob({ title: value });
+    }
+  }
 
   function addResponsibility() {
-    setResponsibilities([
+    const newResponsibilities = [
       ...responsibilities,
-      { id: crypto.randomUUID(), value: "" },
-    ]);
+      {
+        id: crypto.randomUUID(),
+        title: "",
+      },
+    ];
+    updateJob({ responsibilities: newResponsibilities });
   }
 
   function removeResponsibility(id) {
-    setResponsibilities(
-      responsibilities.filter((responsibility) => responsibility.id !== id)
+    const newResponsibilities = responsibilities.filter(
+      (responsibility) => responsibility.id !== id
     );
+    updateJob({ responsibilities: newResponsibilities });
   }
 
-  return (
-    <>
-      <ul className="responsibilities" style={style}>
-        {responsibilities.map((responsibility) => (
-          <Responsibility
-            key={responsibility.id}
-            id={responsibility.id}
-            removeResponsibility={removeResponsibility}
-          />
-        ))}
-      </ul>
-      <button type="button" onClick={addResponsibility}>
-        Add responsibility
-      </button>
-    </>
-  );
-}
+  function updateResponsibility(id, data) {
+    const newResponsibilities = responsibilities.map((responsibility) =>
+      responsibility.id === id ? { ...responsibility, ...data } : responsibility
+    );
+    updateJob({ responsibilities: newResponsibilities });
+  }
 
-function Job({ id, removeJob }) {
-  function getData({ event, value }) {
-    if (event.type === "blur" && !value) {
-      removeJob(id);
+  function getDescriptionData({ event, value }) {
+    if (event.type === "change") {
+      updateJob({ description: value });
+    }
+  }
+
+  function getDateData({ event, value }) {
+    if (event.type === "change") {
+      updateJob({ date: value });
     }
   }
 
@@ -71,36 +85,80 @@ function Job({ id, removeJob }) {
         editPlaceholderText="Enter a job..."
         editMode={true}
         multiLine={false}
-        callbackFunc={getData}
+        callbackFunc={getTitleData}
       />
-      <DateField />
-      <Responsibilities style={{ paddingLeft: "20px" }} />
-      <EditableFieldToggle
-        buttonText="Add description"
-        editPlaceholderText="Enter a description"
-        editMode={false}
-        multiLine={true}
-      />
+      {active && (
+        <>
+          <DateField callbackFunc={getDateData} />
+          <ul className="responsibilities" style={{ paddingLeft: "20px" }}>
+            {responsibilities.map((responsibility) => (
+              <Responsibility
+                key={responsibility.id}
+                responsibility={responsibility}
+                removeResponsibility={() =>
+                  removeResponsibility(responsibility.id)
+                }
+                updateResponsibility={(data) =>
+                  updateResponsibility(responsibility.id, data)
+                }
+              />
+            ))}
+          </ul>
+          <button type="button" onClick={addResponsibility}>
+            Add responsibility
+          </button>
+          <EditableFieldToggle
+            buttonText="Add description"
+            editPlaceholderText="Enter a description"
+            editMode={false}
+            multiLine={true}
+            callbackFunc={getDescriptionData}
+          />
+        </>
+      )}
     </li>
   );
 }
 
 export default function Experience({ style }) {
-  const [experience, setExperience] = useState([]);
+  const [jobs, setJobs] = useState([]);
 
   function addJob() {
-    setExperience([...experience, { id: crypto.randomUUID(), value: "" }]);
+    const newJobs = [
+      ...jobs,
+      {
+        id: crypto.randomUUID(),
+        title: "",
+        responsibilities: [],
+        description: "",
+        date: "",
+      },
+    ];
+    setJobs(newJobs);
   }
 
   function removeJob(id) {
-    setExperience(experience.filter((job) => job.id !== id));
+    const newJobs = jobs.filter((job) => job.id !== id);
+    setJobs(newJobs);
+  }
+
+  function updateJob(id, data) {
+    const newJobs = jobs.map((job) =>
+      job.id === id ? { ...job, ...data } : job
+    );
+    setJobs(newJobs);
   }
 
   return (
     <>
-      <ul className="experience" style={style}>
-        {experience.map((job) => (
-          <Job key={job.id} id={job.id} removeJob={removeJob} />
+      <ul className="jobs" style={style}>
+        {jobs.map((job) => (
+          <Job
+            key={job.id}
+            job={job}
+            removeJob={() => removeJob(job.id)}
+            updateJob={(data) => updateJob(job.id, data)}
+          />
         ))}
       </ul>
       <button type="button" onClick={addJob}>

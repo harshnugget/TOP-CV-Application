@@ -3,22 +3,37 @@ import EditableField from "./EditableField";
 import EditableFieldToggle from "./EditableFieldToggle";
 import DateField from "./DateField";
 
-function Subject({ id, removeSubject }) {
+function Subject({ removeSubject, updateSubject }) {
   const [separator, setSeparator] = useState(false);
+  const [active, setActive] = useState(false);
 
-  function getData({ event, value }) {
-    if (event.type === "blur" && !value) {
-      removeSubject(id);
+  function getNameData({ event, value }) {
+    if (event.type === "blur") {
+      if (!value) {
+        removeSubject();
+      } else if (!active) {
+        setActive(true);
+      }
+    } else if (event.type === "change") {
+      updateSubject({ name: value });
     }
   }
 
-  function addSeparator({ event, value }) {
+  function getGradeData({ event, value }) {
     if (event.type === "blur") {
       if (value) {
         setSeparator(true);
       } else {
         setSeparator(false);
       }
+    } else if (event.type === "change") {
+      updateSubject({ grade: value });
+    }
+  }
+
+  function getDateData({ event, value }) {
+    if (event.type === "change") {
+      updateSubject({ date: value });
     }
   }
 
@@ -30,55 +45,76 @@ function Subject({ id, removeSubject }) {
           editPlaceholderText="Enter a subject..."
           editMode={true}
           multiLine={false}
-          callbackFunc={getData}
+          callbackFunc={getNameData}
         />
         {separator && <span>-</span>}
-        <EditableFieldToggle
-          buttonText="Add grade"
-          editPlaceholderText="Enter a grade..."
-          editMode={false}
-          multiLine={true}
-          callbackFunc={addSeparator}
-        />
-        <DateField />
+        {active && (
+          <>
+            <EditableFieldToggle
+              buttonText="Add grade"
+              editPlaceholderText="Enter a grade..."
+              editMode={false}
+              multiLine={true}
+              callbackFunc={getGradeData}
+            />
+            <DateField callbackFunc={getDateData} />
+          </>
+        )}
       </div>
     </li>
   );
 }
 
-function Subjects({ style }) {
-  const [subjects, setSubjects] = useState([]);
+function Institution({ institution, removeInstitution, updateInstitution }) {
+  const [active, setActive] = useState(false);
+  const subjects = institution.subjects;
+
+  function getNameData({ event, value }) {
+    if (event.type === "blur") {
+      if (!value) {
+        removeInstitution();
+      } else if (!active) {
+        setActive(true);
+      }
+    } else if (event.type === "change") {
+      updateInstitution({ name: value });
+    }
+  }
 
   function addSubject() {
-    setSubjects([...subjects, { id: crypto.randomUUID(), value: "" }]);
+    const newSubjects = [
+      ...subjects,
+      {
+        id: crypto.randomUUID(),
+        name: "",
+        grade: "",
+        date: "",
+      },
+    ];
+    updateInstitution({ subjects: newSubjects });
   }
 
   function removeSubject(id) {
-    setSubjects(subjects.filter((subject) => subject.id !== id));
+    const newSubjects = subjects.filter((subject) => subject.id !== id);
+    updateInstitution({ subjects: newSubjects });
   }
 
-  return (
-    <>
-      <ul className="subjects" style={style}>
-        {subjects.map((subject) => (
-          <Subject
-            key={subject.id}
-            id={subject.id}
-            removeSubject={removeSubject}
-          />
-        ))}
-      </ul>
-      <button type="button" onClick={addSubject}>
-        Add subject
-      </button>
-    </>
-  );
-}
+  function updateSubject(id, data) {
+    const newSubjects = subjects.map((subject) =>
+      subject.id === id ? { ...subject, ...data } : subject
+    );
+    updateInstitution({ subjects: newSubjects });
+  }
 
-function Institution({ id, removeInstitution }) {
-  function getData({ event, value }) {
-    if (event.type === "blur" && !value) {
-      removeInstitution(id);
+  function getDescriptionData({ event, value }) {
+    if (event.type === "change") {
+      updateInstitution({ description: value });
+    }
+  }
+
+  function getDateData({ event, value }) {
+    if (event.type === "change") {
+      updateInstitution({ date: value });
     }
   }
 
@@ -89,16 +125,33 @@ function Institution({ id, removeInstitution }) {
         editPlaceholderText="Enter an institution..."
         editMode={true}
         multiLine={false}
-        callbackFunc={getData}
+        callbackFunc={getNameData}
       />
-      <DateField />
-      <Subjects style={{ paddingLeft: "20px" }} />
-      <EditableFieldToggle
-        buttonText="Add description"
-        editPlaceholderText="Enter a description..."
-        editMode={false}
-        multiLine={true}
-      />
+      {active && (
+        <>
+          <DateField callbackFunc={getDateData} />
+          <ul className="subjects" style={{ paddingLeft: "20px" }}>
+            {subjects.map((subject) => (
+              <Subject
+                key={subject.id}
+                subject={subject}
+                removeSubject={() => removeSubject(subject.id)}
+                updateSubject={(data) => updateSubject(subject.id, data)}
+              />
+            ))}
+          </ul>
+          <button type="button" onClick={addSubject}>
+            Add subject
+          </button>
+          <EditableFieldToggle
+            buttonText="Add description"
+            editPlaceholderText="Enter a description..."
+            editMode={false}
+            multiLine={true}
+            callbackFunc={getDescriptionData}
+          />
+        </>
+      )}
     </li>
   );
 }
@@ -107,11 +160,31 @@ export default function Education({ style }) {
   const [institutions, setInstitutions] = useState([]);
 
   function addInstitution() {
-    setInstitutions([...institutions, { id: crypto.randomUUID(), value: "" }]);
+    const newInstitutions = [
+      ...institutions,
+      {
+        id: crypto.randomUUID(),
+        name: "",
+        subjects: [],
+        description: "",
+        date: "",
+      },
+    ];
+    setInstitutions(newInstitutions);
   }
 
   function removeInstitution(id) {
-    setInstitutions(institutions.filter((job) => job.id !== id));
+    const newInstitutions = institutions.filter(
+      (institution) => institution.id !== id
+    );
+    setInstitutions(newInstitutions);
+  }
+
+  function updateInstitution(id, data) {
+    const newInstitutions = institutions.map((institution) =>
+      institution.id === id ? { ...institution, ...data } : institution
+    );
+    setInstitutions(newInstitutions);
   }
 
   return (
@@ -120,8 +193,11 @@ export default function Education({ style }) {
         {institutions.map((institution) => (
           <Institution
             key={institution.id}
-            id={institution.id}
-            removeInstitution={removeInstitution}
+            institution={institution}
+            removeInstitution={() => removeInstitution(institution.id)}
+            updateInstitution={(data) =>
+              updateInstitution(institution.id, data)
+            }
           />
         ))}
       </ul>

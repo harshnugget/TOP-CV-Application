@@ -1,10 +1,12 @@
 import { useState } from "react";
 import EditableField from "./EditableField";
 
-function Skill({ id, removeSkill }) {
+function Skill({ removeSkill, updateSkill }) {
   function getData({ event, value }) {
     if (event.type === "blur" && !value) {
-      removeSkill(id);
+      removeSkill();
+    } else if (event.type === "change") {
+      updateSkill({ value });
     }
   }
 
@@ -25,18 +27,32 @@ export default function Skills({ style }) {
   const [skills, setSkills] = useState([]);
 
   function addSkill() {
-    setSkills([...skills, { id: crypto.randomUUID(), value: "" }]);
+    const newSkills = [...skills, { id: crypto.randomUUID(), value: "" }];
+    setSkills(newSkills);
   }
 
   function removeSkill(id) {
-    setSkills(skills.filter((skill) => skill.id !== id));
+    const newSkills = skills.filter((skill) => skill.id !== id);
+    setSkills(newSkills);
+  }
+
+  function updateSkill(id, data) {
+    const newSkills = skills.map((skill) =>
+      skill.id === id ? { ...skill, ...data } : skill
+    );
+    setSkills(newSkills);
   }
 
   return (
     <>
       <ul className="skills" style={style}>
         {skills.map((skill) => (
-          <Skill key={skill.id} id={skill.id} removeSkill={removeSkill} />
+          <Skill
+            key={skill.id}
+            skill={skill}
+            removeSkill={() => removeSkill(skill.id)}
+            updateSkill={(data) => updateSkill(skill.id, data)}
+          />
         ))}
       </ul>
       <button type="button" onClick={addSkill}>
