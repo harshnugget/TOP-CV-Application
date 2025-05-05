@@ -156,7 +156,7 @@ function Institution({ institution, removeInstitution, updateInstitution }) {
   );
 }
 
-export default function Education({ style }) {
+export default function Education({ updateEducation, style }) {
   const [institutions, setInstitutions] = useState([]);
 
   function addInstitution() {
@@ -171,6 +171,7 @@ export default function Education({ style }) {
       },
     ];
     setInstitutions(newInstitutions);
+    updateEducation(newInstitutions);
   }
 
   function removeInstitution(id) {
@@ -178,6 +179,7 @@ export default function Education({ style }) {
       (institution) => institution.id !== id
     );
     setInstitutions(newInstitutions);
+    updateEducation(newInstitutions);
   }
 
   function updateInstitution(id, data) {
@@ -185,6 +187,7 @@ export default function Education({ style }) {
       institution.id === id ? { ...institution, ...data } : institution
     );
     setInstitutions(newInstitutions);
+    updateEducation(newInstitutions);
   }
 
   return (

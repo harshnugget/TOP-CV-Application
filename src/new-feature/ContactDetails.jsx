@@ -62,7 +62,7 @@ function Phone({ style, setPhone }) {
   );
 }
 
-export default function ContactDetails({ style }) {
+export default function ContactDetails({ updateContactDetails, style }) {
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -73,21 +73,25 @@ export default function ContactDetails({ style }) {
   function setFirstName(value) {
     const newData = { ...data, firstName: value };
     setData(newData);
+    updateContactDetails(newData);
   }
 
   function setLastName(value) {
     const newData = { ...data, lastName: value };
     setData(newData);
+    updateContactDetails(newData);
   }
 
   function setEmail(value) {
     const newData = { ...data, email: value };
     setData(newData);
+    updateContactDetails(newData);
   }
 
   function setPhone(value) {
     const newData = { ...data, phone: value };
     setData(newData);
+    updateContactDetails(newData);
   }
 
   return (

@@ -23,17 +23,19 @@ function Skill({ removeSkill, updateSkill }) {
   );
 }
 
-export default function Skills({ style }) {
+export default function Skills({ updateSkills, style }) {
   const [skills, setSkills] = useState([]);
 
   function addSkill() {
     const newSkills = [...skills, { id: crypto.randomUUID(), value: "" }];
     setSkills(newSkills);
+    updateSkills(newSkills);
   }
 
   function removeSkill(id) {
     const newSkills = skills.filter((skill) => skill.id !== id);
     setSkills(newSkills);
+    updateSkills(newSkills);
   }
 
   function updateSkill(id, data) {
@@ -41,6 +43,7 @@ export default function Skills({ style }) {
       skill.id === id ? { ...skill, ...data } : skill
     );
     setSkills(newSkills);
+    updateSkills(newSkills);
   }
 
   return (

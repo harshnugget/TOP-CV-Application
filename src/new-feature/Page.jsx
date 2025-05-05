@@ -1,19 +1,27 @@
 import { useState } from "react";
-import { Name, Email, Phone } from "./ContactDetails";
+import ContactDetails from "./ContactDetails";
 import Skills from "./Skills";
 import Experience from "./Experience";
 import Education from "./Education";
 
 const defaultGrid = `
-  "name name"
-  "email email"
-  "phone phone"
+  "contact-details contact-details"
   "skills-header skills-content"
   "experience-header experience-content"
   "education-header education-content"
   `;
 
 export default function Page({ gridAreaLayout = defaultGrid }) {
+  const [data, setData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    skills: [],
+    experience: [],
+    education: [],
+  });
+
   const width = 560;
   const height = width * 1.41;
   const pageInset = Math.round(width / 30);
@@ -37,15 +45,21 @@ export default function Page({ gridAreaLayout = defaultGrid }) {
 
   return (
     <>
-      <div className="cv-page" style={{ ...styles }}>
-        <Name style={{ display: "flex", gridArea: "name" }} />
-        <Email style={{ display: "flex", gridArea: "email" }} />
-        <Phone style={{ display: "flex", gridArea: "phone" }} />
+      <div style={{ ...styles }}>
+        <ContactDetails
+          updateContactDetails={(contactDetails) =>
+            setData({ ...data, ...contactDetails })
+          }
+          style={{ gridArea: "contact-details" }}
+        />
         <div className="skills-header" style={{ gridArea: "skills-header" }}>
           Skills
         </div>
         <div className="skills-content" style={{ gridArea: "skills-content" }}>
-          <Skills style={{ display: "block", gridArea: "skills-content" }} />
+          <Skills
+            updateSkills={(skills) => setData({ ...data, skills })}
+            style={{ display: "block", gridArea: "skills-content" }}
+          />
         </div>
         <div
           className="experience-header"
@@ -58,6 +72,7 @@ export default function Page({ gridAreaLayout = defaultGrid }) {
           style={{ gridArea: "experience-content" }}
         >
           <Experience
+            updateExperience={(experience) => setData({ ...data, experience })}
             style={{ display: "block", gridArea: "experience-content" }}
           />
         </div>
@@ -69,6 +84,7 @@ export default function Page({ gridAreaLayout = defaultGrid }) {
         </div>
         <div className="education-content">
           <Education
+            updateEducation={(education) => setData({ ...data, education })}
             style={{ display: "block", gridArea: "education-content" }}
           />
         </div>

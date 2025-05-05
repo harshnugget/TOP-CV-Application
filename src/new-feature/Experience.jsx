@@ -120,7 +120,7 @@ function Job({ job, removeJob, updateJob }) {
   );
 }
 
-export default function Experience({ style }) {
+export default function Experience({ updateExperience, style }) {
   const [jobs, setJobs] = useState([]);
 
   function addJob() {
@@ -135,11 +135,13 @@ export default function Experience({ style }) {
       },
     ];
     setJobs(newJobs);
+    updateExperience(newJobs);
   }
 
   function removeJob(id) {
     const newJobs = jobs.filter((job) => job.id !== id);
     setJobs(newJobs);
+    updateExperience(newJobs);
   }
 
   function updateJob(id, data) {
@@ -147,6 +149,7 @@ export default function Experience({ style }) {
       job.id === id ? { ...job, ...data } : job
     );
     setJobs(newJobs);
+    updateExperience(newJobs);
   }
 
   return (
