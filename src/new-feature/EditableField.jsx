@@ -136,7 +136,7 @@ export default function EditableField({
       <textarea
         autoFocus={_editMode}
         className={`editable-field__textarea ${
-          _editMode ? `editable-field__textarea--active` : ""
+          _editMode ? `editable-field__textarea--edit` : ""
         }`}
         style={{ ...textAreaStyles, ...sharedStyles }}
         value={_value}

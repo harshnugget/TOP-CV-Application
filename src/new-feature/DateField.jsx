@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function DateField({ customStyles }) {
+export default function DateField({ customStyles, callbackFunc }) {
   const [_editMode, setEditMode] = useState(true);
   const [_hovered, setHovered] = useState(false);
   const [_value, setValue] = useState("");
@@ -53,12 +53,20 @@ export default function DateField({ customStyles }) {
   const displayDate = _value ? new Date(_value).toLocaleDateString() : "";
 
   function eventHandler(e) {
+    const states = {
+      editMode: _editMode,
+      hovered: _hovered,
+      value: _value,
+    };
+
     switch (e.type) {
       case "mouseover":
         setHovered(true);
+        states.hovered = true;
         break;
       case "mouseleave":
         setHovered(false);
+        states.hovered = false;
         break;
     }
 
@@ -66,6 +74,7 @@ export default function DateField({ customStyles }) {
       switch (e.type) {
         case "click":
           setEditMode(true);
+          states.editMode = true;
           break;
       }
     }
@@ -74,15 +83,22 @@ export default function DateField({ customStyles }) {
       switch (e.type) {
         case "blur":
           if (_value) setEditMode(false);
+          states.editMode = false;
           break;
         case "change":
           setValue(e.target.value);
+          states.value = e.target.value;
           break;
         case "keydown":
-          if (e.key === "Enter" && _value) {
-            setEditMode(false);
+          if (e.key === "Enter") {
+            e.target.blur();
           }
       }
+    }
+
+    // Send state and event data to callback function
+    if (callbackFunc && typeof callbackFunc === "function") {
+      callbackFunc({ ...states, event: e });
     }
   }
 
@@ -96,7 +112,7 @@ export default function DateField({ customStyles }) {
     >
       <input
         className={`date-toggle__input ${
-          _editMode ? `date-toggle__input--active` : ""
+          _editMode ? `date-toggle__input--edit` : ""
         }`}
         type="date"
         value={_value}
