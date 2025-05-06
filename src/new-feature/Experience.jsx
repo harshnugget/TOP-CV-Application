@@ -3,7 +3,11 @@ import EditableField from "./EditableField";
 import EditableFieldToggle from "./EditableFieldToggle";
 import DateField from "./DateField";
 
-function Responsibility({ removeResponsibility, updateResponsibility }) {
+function Responsibility({
+  removeResponsibility,
+  updateResponsibility,
+  previewMode,
+}) {
   function getTitleData({ event, value }) {
     if (event.type === "blur" && !value) {
       removeResponsibility();
@@ -19,13 +23,14 @@ function Responsibility({ removeResponsibility, updateResponsibility }) {
         editPlaceholderText="Enter a responsibility..."
         editMode={true}
         multiLine={false}
+        disableEditing={previewMode}
         callbackFunc={getTitleData}
       />
     </li>
   );
 }
 
-function Job({ job, removeJob, updateJob }) {
+function Job({ job, removeJob, updateJob, previewMode }) {
   const [active, setActive] = useState(false);
   const { responsibilities } = job;
 
@@ -85,11 +90,12 @@ function Job({ job, removeJob, updateJob }) {
         editPlaceholderText="Enter a job..."
         editMode={true}
         multiLine={false}
+        disableEditing={previewMode}
         callbackFunc={getTitleData}
       />
       {active && (
         <>
-          <DateField callbackFunc={getDateData} />
+          <DateField callbackFunc={getDateData} disableEditing={previewMode} />
           <ul className="responsibilities" style={{ paddingLeft: "20px" }}>
             {responsibilities.map((responsibility) => (
               <Responsibility
@@ -101,17 +107,22 @@ function Job({ job, removeJob, updateJob }) {
                 updateResponsibility={(data) =>
                   updateResponsibility(responsibility.id, data)
                 }
+                previewMode={previewMode}
               />
             ))}
           </ul>
-          <button type="button" onClick={addResponsibility}>
-            Add responsibility
-          </button>
+          {!previewMode && (
+            <button type="button" onClick={addResponsibility}>
+              Add responsibility
+            </button>
+          )}
+
           <EditableFieldToggle
             buttonText="Add description"
             editPlaceholderText="Enter a description"
             editMode={false}
             multiLine={true}
+            disableEditing={previewMode}
             callbackFunc={getDescriptionData}
           />
         </>
@@ -120,7 +131,7 @@ function Job({ job, removeJob, updateJob }) {
   );
 }
 
-export default function Experience({ updateExperience, style }) {
+export default function Experience({ updateExperience, previewMode, style }) {
   const [jobs, setJobs] = useState([]);
 
   function addJob() {
@@ -161,12 +172,15 @@ export default function Experience({ updateExperience, style }) {
             job={job}
             removeJob={() => removeJob(job.id)}
             updateJob={(data) => updateJob(job.id, data)}
+            previewMode={previewMode}
           />
         ))}
       </ul>
-      <button type="button" onClick={addJob}>
-        Add job
-      </button>
+      {!previewMode && (
+        <button type="button" onClick={addJob}>
+          Add job
+        </button>
+      )}
     </>
   );
 }

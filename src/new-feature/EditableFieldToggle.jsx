@@ -6,6 +6,7 @@ export default function EditableFieldToggle({
   editPlaceholderText = "Enter some text...",
   editMode = false,
   multiLine = false,
+  disableEditing = false,
   style,
   callbackFunc,
 }) {
@@ -23,15 +24,17 @@ export default function EditableFieldToggle({
 
   return (
     <div className="editable-field-toggle" style={style}>
-      {showButton ? (
+      {showButton && !disableEditing ? (
         <button type="button" onClick={() => setShowButton(false)}>
           {buttonText}
         </button>
       ) : (
         <EditableField
+          defaultPlaceholderText=""
           editPlaceholderText={editPlaceholderText}
           editMode={true}
           multiLine={multiLine}
+          disableEditing={disableEditing}
           callbackFunc={getData}
         />
       )}

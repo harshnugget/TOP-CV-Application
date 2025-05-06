@@ -3,7 +3,7 @@ import EditableField from "./EditableField";
 import EditableFieldToggle from "./EditableFieldToggle";
 import DateField from "./DateField";
 
-function Subject({ removeSubject, updateSubject }) {
+function Subject({ removeSubject, updateSubject, previewMode }) {
   const [separator, setSeparator] = useState(false);
   const [active, setActive] = useState(false);
 
@@ -45,6 +45,7 @@ function Subject({ removeSubject, updateSubject }) {
           editPlaceholderText="Enter a subject..."
           editMode={true}
           multiLine={false}
+          disableEditing={previewMode}
           callbackFunc={getNameData}
         />
         {separator && <span>-</span>}
@@ -55,9 +56,13 @@ function Subject({ removeSubject, updateSubject }) {
               editPlaceholderText="Enter a grade..."
               editMode={false}
               multiLine={true}
+              disableEditing={previewMode}
               callbackFunc={getGradeData}
             />
-            <DateField callbackFunc={getDateData} />
+            <DateField
+              callbackFunc={getDateData}
+              disableEditing={previewMode}
+            />
           </>
         )}
       </div>
@@ -65,7 +70,12 @@ function Subject({ removeSubject, updateSubject }) {
   );
 }
 
-function Institution({ institution, removeInstitution, updateInstitution }) {
+function Institution({
+  institution,
+  removeInstitution,
+  updateInstitution,
+  previewMode,
+}) {
   const [active, setActive] = useState(false);
   const subjects = institution.subjects;
 
@@ -125,11 +135,12 @@ function Institution({ institution, removeInstitution, updateInstitution }) {
         editPlaceholderText="Enter an institution..."
         editMode={true}
         multiLine={false}
+        disableEditing={previewMode}
         callbackFunc={getNameData}
       />
       {active && (
         <>
-          <DateField callbackFunc={getDateData} />
+          <DateField callbackFunc={getDateData} disableEditing={previewMode} />
           <ul className="subjects" style={{ paddingLeft: "20px" }}>
             {subjects.map((subject) => (
               <Subject
@@ -137,17 +148,22 @@ function Institution({ institution, removeInstitution, updateInstitution }) {
                 subject={subject}
                 removeSubject={() => removeSubject(subject.id)}
                 updateSubject={(data) => updateSubject(subject.id, data)}
+                previewMode={previewMode}
               />
             ))}
           </ul>
-          <button type="button" onClick={addSubject}>
-            Add subject
-          </button>
+          {!previewMode && (
+            <button type="button" onClick={addSubject}>
+              Add subject
+            </button>
+          )}
+
           <EditableFieldToggle
             buttonText="Add description"
             editPlaceholderText="Enter a description..."
             editMode={false}
             multiLine={true}
+            disableEditing={previewMode}
             callbackFunc={getDescriptionData}
           />
         </>
@@ -156,7 +172,7 @@ function Institution({ institution, removeInstitution, updateInstitution }) {
   );
 }
 
-export default function Education({ updateEducation, style }) {
+export default function Education({ updateEducation, previewMode, style }) {
   const [institutions, setInstitutions] = useState([]);
 
   function addInstitution() {
@@ -201,12 +217,15 @@ export default function Education({ updateEducation, style }) {
             updateInstitution={(data) =>
               updateInstitution(institution.id, data)
             }
+            previewMode={previewMode}
           />
         ))}
       </ul>
-      <button type="button" onClick={addInstitution}>
-        Add institution
-      </button>
+      {!previewMode && (
+        <button type="button" onClick={addInstitution}>
+          Add institution
+        </button>
+      )}
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import EditableField from "./EditableField";
 
-function Name({ style, setFirstName, setLastName }) {
+function Name({ setFirstName, setLastName, previewMode, style }) {
   function getFirstName({ value }) {
     setFirstName(value);
   }
@@ -17,6 +17,7 @@ function Name({ style, setFirstName, setLastName }) {
         editPlaceholderText="Enter first name..."
         editMode={false}
         multiLine={false}
+        disableEditing={previewMode}
         callbackFunc={getFirstName}
       />
       <EditableField
@@ -24,13 +25,14 @@ function Name({ style, setFirstName, setLastName }) {
         editPlaceholderText="Enter last name..."
         editMode={false}
         multiLine={false}
+        disableEditing={previewMode}
         callbackFunc={getLastName}
       />
     </div>
   );
 }
 
-function Email({ style, setEmail }) {
+function Email({ setEmail, previewMode, style }) {
   function getEmail({ value }) {
     setEmail(value);
   }
@@ -40,13 +42,14 @@ function Email({ style, setEmail }) {
         defaultPlaceholderText="my-email@email.com"
         editPlaceholderText="Enter email..."
         editMode={false}
+        disableEditing={previewMode}
         callbackFunc={getEmail}
       />
     </div>
   );
 }
 
-function Phone({ style, setPhone }) {
+function Phone({ setPhone, previewMode, style }) {
   function getPhone({ value }) {
     setPhone(value);
   }
@@ -56,13 +59,18 @@ function Phone({ style, setPhone }) {
         defaultPlaceholderText="0123456789"
         editPlaceholderText="Enter phone..."
         editMode={false}
+        disableEditing={previewMode}
         callbackFunc={getPhone}
       />
     </div>
   );
 }
 
-export default function ContactDetails({ updateContactDetails, style }) {
+export default function ContactDetails({
+  updateContactDetails,
+  previewMode,
+  style,
+}) {
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -100,9 +108,18 @@ export default function ContactDetails({ updateContactDetails, style }) {
         style={{ display: "flex" }}
         setFirstName={setFirstName}
         setLastName={setLastName}
+        previewMode={previewMode}
       />
-      <Email style={{ display: "flex" }} setEmail={setEmail} />
-      <Phone style={{ display: "flex" }} setPhone={setPhone} />
+      <Email
+        style={{ display: "flex" }}
+        setEmail={setEmail}
+        previewMode={previewMode}
+      />
+      <Phone
+        style={{ display: "flex" }}
+        setPhone={setPhone}
+        previewMode={previewMode}
+      />
     </div>
   );
 }

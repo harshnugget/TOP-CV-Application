@@ -1,9 +1,15 @@
 import { useState } from "react";
 
-export default function DateField({ customStyles, callbackFunc }) {
+export default function DateField({
+  customStyles,
+  disableEditing = false,
+  callbackFunc,
+}) {
   const [_editMode, setEditMode] = useState(true);
   const [_hovered, setHovered] = useState(false);
   const [_value, setValue] = useState("");
+
+  const displayDate = _value ? new Date(_value).toLocaleDateString() : "";
 
   const _customStyles = {
     textAreaBg: "aliceBlue",
@@ -13,7 +19,7 @@ export default function DateField({ customStyles, callbackFunc }) {
   };
 
   const divStyles = {
-    display: "inline-block",
+    display: disableEditing && !displayDate ? "none" : "inline-block",
     width: "max-content",
     maxWidth: "100%",
     position: "relative",
@@ -36,10 +42,11 @@ export default function DateField({ customStyles, callbackFunc }) {
   };
 
   const spanStyles = {
-    visibility: _editMode ? "hidden" : "visible",
-    backgroundColor: _hovered
-      ? _customStyles.spanHoverBg
-      : _customStyles.spanDefaultBg,
+    visibility: _editMode && !disableEditing ? "hidden" : "visible",
+    backgroundColor:
+      _hovered && !disableEditing
+        ? _customStyles.spanHoverBg
+        : _customStyles.spanDefaultBg,
   };
 
   const sharedStyles = {
@@ -49,8 +56,6 @@ export default function DateField({ customStyles, callbackFunc }) {
     lineHeight: "inherit",
     padding: "2px",
   };
-
-  const displayDate = _value ? new Date(_value).toLocaleDateString() : "";
 
   function eventHandler(e) {
     const states = {
@@ -73,8 +78,10 @@ export default function DateField({ customStyles, callbackFunc }) {
     if (!_editMode) {
       switch (e.type) {
         case "click":
-          setEditMode(true);
-          states.editMode = true;
+          if (!disableEditing) {
+            setEditMode(true);
+            states.editMode = true;
+          }
           break;
       }
     }
@@ -110,17 +117,20 @@ export default function DateField({ customStyles, callbackFunc }) {
       onMouseLeave={eventHandler}
       onClick={eventHandler}
     >
-      <input
-        className={`date-toggle__input ${
-          _editMode ? `date-toggle__input--edit` : ""
-        }`}
-        type="date"
-        value={_value}
-        onChange={eventHandler}
-        onBlur={eventHandler}
-        onKeyDown={eventHandler}
-        style={{ ...sharedStyles, ...inputStyles }}
-      />
+      {!disableEditing && (
+        <input
+          className={`date-toggle__input ${
+            _editMode ? `date-toggle__input--edit` : ""
+          }`}
+          type="date"
+          value={_value}
+          onChange={eventHandler}
+          onBlur={eventHandler}
+          onKeyDown={eventHandler}
+          style={{ ...sharedStyles, ...inputStyles }}
+        />
+      )}
+
       <span
         className={`date-toggle__span ${
           _hovered ? "date-toggle__span--hovered" : ""

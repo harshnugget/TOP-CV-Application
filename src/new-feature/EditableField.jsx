@@ -21,9 +21,10 @@ export default function EditableField({
   customStyles,
   editMode = true,
   multiLine = true,
+  disableEditing = false,
   callbackFunc,
 }) {
-  const [_editMode, setEditMode] = useState(editMode);
+  const [_editMode, setEditMode] = useState(disableEditing ? false : editMode);
   const [_hovered, setHovered] = useState(false);
   const [_value, setValue] = useState("");
 
@@ -35,7 +36,10 @@ export default function EditableField({
   };
 
   const divStyles = {
-    display: "inline-block",
+    display:
+      disableEditing && !_value && !defaultPlaceholderText
+        ? "none"
+        : "inline-block",
     width: "max-content",
     maxWidth: "100%",
     position: "relative",
@@ -60,9 +64,10 @@ export default function EditableField({
 
   const spanStyles = {
     visibility: _editMode ? "hidden" : "visible",
-    backgroundColor: _hovered
-      ? _customStyles.spanHoverBg
-      : _customStyles.spanDefaultBg,
+    backgroundColor:
+      _hovered && !disableEditing
+        ? _customStyles.spanHoverBg
+        : _customStyles.spanDefaultBg,
   };
 
   const sharedStyles = {
@@ -94,7 +99,10 @@ export default function EditableField({
     if (!_editMode) {
       switch (e.type) {
         case "click":
-          setEditMode(true);
+          if (!disableEditing) {
+            setEditMode(true);
+            states.editMode = true;
+          }
           break;
       }
     }
@@ -133,18 +141,21 @@ export default function EditableField({
       onMouseOver={eventHandler}
       onMouseLeave={eventHandler}
     >
-      <textarea
-        autoFocus={_editMode}
-        className={`editable-field__textarea ${
-          _editMode ? `editable-field__textarea--edit` : ""
-        }`}
-        style={{ ...textAreaStyles, ...sharedStyles }}
-        value={_value}
-        placeholder={editPlaceholderText}
-        onChange={eventHandler}
-        onBlur={eventHandler}
-        onKeyDown={eventHandler}
-      />
+      {!disableEditing && (
+        <textarea
+          autoFocus={_editMode}
+          className={`editable-field__textarea ${
+            _editMode ? `editable-field__textarea--edit` : ""
+          }`}
+          style={{ ...textAreaStyles, ...sharedStyles }}
+          value={_value}
+          placeholder={editPlaceholderText}
+          onChange={eventHandler}
+          onBlur={eventHandler}
+          onKeyDown={eventHandler}
+        />
+      )}
+
       <span
         className={`editable-field__span ${
           _hovered ? "editable-field__span--hovered" : ""

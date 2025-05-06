@@ -1,7 +1,7 @@
 import { useState } from "react";
 import EditableField from "./EditableField";
 
-function Skill({ removeSkill, updateSkill }) {
+function Skill({ removeSkill, updateSkill, previewMode }) {
   function getData({ event, value }) {
     if (event.type === "blur" && !value) {
       removeSkill();
@@ -17,13 +17,14 @@ function Skill({ removeSkill, updateSkill }) {
         editPlaceholderText="Enter a skill..."
         editMode={true}
         multiLine={false}
+        disableEditing={previewMode}
         callbackFunc={getData}
       />
     </li>
   );
 }
 
-export default function Skills({ updateSkills, style }) {
+export default function Skills({ updateSkills, previewMode, style }) {
   const [skills, setSkills] = useState([]);
 
   function addSkill() {
@@ -55,12 +56,15 @@ export default function Skills({ updateSkills, style }) {
             skill={skill}
             removeSkill={() => removeSkill(skill.id)}
             updateSkill={(data) => updateSkill(skill.id, data)}
+            previewMode={previewMode}
           />
         ))}
       </ul>
-      <button type="button" onClick={addSkill}>
-        Add skill
-      </button>
+      {!previewMode && (
+        <button type="button" onClick={addSkill}>
+          Add skill
+        </button>
+      )}
     </>
   );
 }

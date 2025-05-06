@@ -12,6 +12,7 @@ const defaultGrid = `
   `;
 
 export default function Page({ gridAreaLayout = defaultGrid }) {
+  const [previewMode, setPreviewMode] = useState(false);
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -43,13 +44,25 @@ export default function Page({ gridAreaLayout = defaultGrid }) {
     }px grey`,
   };
 
+  function onClickPreviewBtn() {
+    setPreviewMode(true);
+  }
+
+  function onClickEditBtn() {
+    setPreviewMode(false);
+  }
+
   return (
     <>
-      <div style={{ ...styles }}>
+      <div
+        className={`cv-page ${previewMode ? "preview-mode" : "edit-mode"}`}
+        style={{ ...styles }}
+      >
         <ContactDetails
           updateContactDetails={(contactDetails) =>
             setData({ ...data, ...contactDetails })
           }
+          previewMode={previewMode}
           style={{ gridArea: "contact-details" }}
         />
         <div className="skills-header" style={{ gridArea: "skills-header" }}>
@@ -58,6 +71,7 @@ export default function Page({ gridAreaLayout = defaultGrid }) {
         <div className="skills-content" style={{ gridArea: "skills-content" }}>
           <Skills
             updateSkills={(skills) => setData({ ...data, skills })}
+            previewMode={previewMode}
             style={{ display: "block", gridArea: "skills-content" }}
           />
         </div>
@@ -73,6 +87,7 @@ export default function Page({ gridAreaLayout = defaultGrid }) {
         >
           <Experience
             updateExperience={(experience) => setData({ ...data, experience })}
+            previewMode={previewMode}
             style={{ display: "block", gridArea: "experience-content" }}
           />
         </div>
@@ -85,10 +100,20 @@ export default function Page({ gridAreaLayout = defaultGrid }) {
         <div className="education-content">
           <Education
             updateEducation={(education) => setData({ ...data, education })}
+            previewMode={previewMode}
             style={{ display: "block", gridArea: "education-content" }}
           />
         </div>
       </div>
+      {previewMode ? (
+        <button type="button" onClick={onClickEditBtn}>
+          Edit
+        </button>
+      ) : (
+        <button type="button" onClick={onClickPreviewBtn}>
+          Preview
+        </button>
+      )}
     </>
   );
 }
