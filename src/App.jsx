@@ -1,7 +1,5 @@
 import { useState } from "react";
-import Form from "./components/Form";
-import CV from "./components/CV";
-import Page from "./new-feature/Page";
+import Page from "./components/Page";
 // import "./App.css";
 
 function App() {

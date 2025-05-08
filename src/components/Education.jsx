@@ -1,167 +1,223 @@
-function Grades({ grades, updateGrades }) {
-  function addGrade() {
-    updateGrades([
-      ...grades,
-      { id: crypto.randomUUID(), title: "", score: "" },
-    ]);
-  }
+import { useState } from "react";
+import EditableField from "./EditableField";
 
-  function removeGrade(id) {
-    updateGrades(grades.filter((grade) => grade.id !== id));
-  }
-
-  function handleChange(id, field, value) {
-    updateGrades(
-      grades.map((grade) =>
-        grade.id === id ? { ...grade, [field]: value } : grade
-      )
-    );
-  }
+function Subject({ removeSubject, updateSubject, previewMode }) {
+  const [separator, setSeparator] = useState(false);
+  const [gradeActive, setGradeActive] = useState(false);
+  const [dateActive, setDateActive] = useState(false);
 
   return (
-    <>
-      <button type="button" className="add-btn" onClick={addGrade}>
-        Add Grade
-      </button>
-
-      <ul className="grades-list" style={{ listStyleType: "none" }}>
-        {grades.map((grade) => (
-          <li key={grade.id}>
-            Grade:{" "}
-            <div className="grade-container">
-              <input
-                className="grade-title"
-                type="text"
-                value={grade.title}
-                placeholder="Subject"
-                onChange={(e) =>
-                  handleChange(grade.id, "title", e.target.value)
-                }
+    <li className="subject">
+      <div style={{ display: "flex" }}>
+        <EditableField
+          type="text"
+          previewPlaceholder="Subject"
+          editPlaceholder="Enter subject..."
+          editMode={true}
+          autoFocus={true}
+          onInput={(e) => updateSubject({ title: e.target.value })}
+          onBlur={(e) => {
+            !e.target.value && removeSubject();
+            e.target.value ? setGradeActive(true) : setGradeActive(false);
+          }}
+        />
+        {separator && <span>-</span>}
+        {gradeActive && (
+          <>
+            <EditableField
+              type="text"
+              previewPlaceholder={previewMode ? "" : "Grade"}
+              editPlaceholder="Enter grade..."
+              editMode={true}
+              autoFocus={true}
+              onInput={(e) => updateSubject({ grade: e.target.value })}
+              onBlur={(e) => {
+                e.target.value ? setSeparator(true) : setSeparator(false);
+                e.target.value ? setDateActive(true) : setDateActive(false);
+              }}
+            />
+            {dateActive && (
+              <EditableField
+                previewPlaceholder={previewMode ? "" : "dd/mm//yyyy"}
+                editPlaceholder="Enter date..."
+                type="date"
+                editMode={true}
+                autoFocus={true}
+                onInput={(e) => updateSubject({ date: e.target.value })}
               />
-              <input
-                className="grade-score"
-                type="text"
-                value={grade.score}
-                placeholder="Score"
-                onChange={(e) =>
-                  handleChange(grade.id, "score", e.target.value)
-                }
-              />
-            </div>
-            <button
-              type="button"
-              className="remove-btn"
-              onClick={() => removeGrade(grade.id)}
-            >
-              Remove Grade
-            </button>
-          </li>
-        ))}
-      </ul>
-    </>
+            )}
+          </>
+        )}
+      </div>
+    </li>
   );
 }
 
-export default function Education({ educations, setEducations }) {
-  function addEducation() {
-    setEducations([
-      ...educations,
+function Institution({
+  institution,
+  removeInstitution,
+  updateInstitution,
+  previewMode,
+}) {
+  const [active, setActive] = useState(false);
+  const [toggleDesc, setToggleDesc] = useState(false);
+  const subjects = institution.subjects;
+
+  function addSubject() {
+    const newSubjects = [
+      ...subjects,
       {
         id: crypto.randomUUID(),
         title: "",
-        fromDate: "",
-        toDate: "",
-        description: "",
-        grades: [],
+        grade: "",
+        date: "",
       },
-    ]);
+    ];
+
+    updateInstitution({ subjects: newSubjects });
   }
 
-  function removeEducation(id) {
-    setEducations(educations.filter((ed) => ed.id !== id));
+  function removeSubject(id) {
+    const newSubjects = subjects.filter((subject) => subject.id !== id);
+
+    updateInstitution({ subjects: newSubjects });
   }
 
-  function handleChange(id, field, value) {
-    setEducations(
-      educations.map((ed) => (ed.id === id ? { ...ed, [field]: value } : ed))
+  function updateSubject(id, value) {
+    const newSubjects = subjects.map((subject) =>
+      subject.id === id ? { ...subject, ...value } : subject
     );
+
+    updateInstitution({ subjects: newSubjects });
   }
 
   return (
-    <div className="education">
-      <button type="button" className="add-btn" onClick={addEducation}>
-        Add Education
-      </button>
+    <li className="institution">
+      <div className="institution-title" style={{ display: "inline-block" }}>
+        <EditableField
+          type="text"
+          previewPlaceholder="Institution"
+          editPlaceholder="Enter institution..."
+          editMode={true}
+          autoFocus={true}
+          onInput={(e) => updateInstitution({ title: e.target.value })}
+          onBlur={(e) =>
+            !e.target.value ? removeInstitution() : !active && setActive(true)
+          }
+        />
+      </div>
 
-      <ul style={{ listStyleType: "none" }}>
-        {educations.map((ed) => (
-          <li key={ed.id}>
-            <fieldset>
-              <label>
-                Education Title:{" "}
-                <input
-                  type="text"
-                  value={ed.title}
-                  placeholder="Enter the name of your school/university"
-                  onChange={(e) => handleChange(ed.id, "title", e.target.value)}
+      {active && (
+        <>
+          <div className="institution-date" style={{ display: "inline-block" }}>
+            <EditableField
+              previewPlaceholder="dd/mm/yyyy"
+              editPlaceholder="Enter date..."
+              type="date"
+              editMode={false}
+              onInput={(e) => updateInstitution({ date: e.target.value })}
+            />
+          </div>
+          <div className="subjects">
+            <ul style={{ paddingLeft: "20px" }}>
+              {subjects.map((subject) => (
+                <Subject
+                  key={subject.id}
+                  subject={subject}
+                  removeSubject={() => removeSubject(subject.id)}
+                  updateSubject={(value) => updateSubject(subject.id, value)}
+                  previewMode={previewMode}
                 />
-              </label>
+              ))}
+            </ul>
+            {!previewMode && (
+              <button type="button" onClick={addSubject}>
+                Add subject
+              </button>
+            )}
+          </div>
 
-              <div className="dates">
-                <label>
-                  From:{" "}
-                  <input
-                    type="date"
-                    value={ed.fromDate}
-                    onChange={(e) =>
-                      handleChange(ed.id, "fromDate", e.target.value)
-                    }
-                  />
-                </label>
-
-                <label>
-                  To:{" "}
-                  <input
-                    type="date"
-                    value={ed.toDate}
-                    onChange={(e) =>
-                      handleChange(ed.id, "toDate", e.target.value)
-                    }
-                  />
-                </label>
-              </div>
-
-              <Grades
-                grades={ed.grades}
-                updateGrades={(newGrades) =>
-                  handleChange(ed.id, "grades", newGrades)
+          <div className="institution-description">
+            {toggleDesc ? (
+              <EditableField
+                previewPlaceholder="Description"
+                editPlaceholder="Enter a description..."
+                type="textarea"
+                editMode={true}
+                autoFocus={true}
+                onInput={(e) =>
+                  updateInstitution({ description: e.target.value })
                 }
+                onBlur={(e) => !e.target.value && setToggleDesc(false)}
               />
-
-              <label>
-                Additional Info:{" "}
-                <textarea
-                  value={ed.description}
-                  placeholder="Write some additional information about your education..."
-                  onChange={(e) =>
-                    handleChange(ed.id, "description", e.target.value)
-                  }
-                />
-              </label>
-
-              <div className="remove-btn-container">
-                <button
-                  type="button"
-                  className="remove-btn"
-                  onClick={() => removeEducation(ed.id)}
-                >
-                  Remove Education
+            ) : (
+              !previewMode && (
+                <button type="button" onClick={() => setToggleDesc(true)}>
+                  Add description
                 </button>
-              </div>
-            </fieldset>
-          </li>
+              )
+            )}
+          </div>
+        </>
+      )}
+    </li>
+  );
+}
+
+export default function Education({ updateEducation, previewMode, style }) {
+  const [institutions, setInstitutions] = useState([]);
+
+  function addInstitution() {
+    const newInstitutions = [
+      ...institutions,
+      {
+        id: crypto.randomUUID(),
+        title: "",
+        subjects: [],
+        description: "",
+        date: "",
+      },
+    ];
+    setInstitutions(newInstitutions);
+    updateEducation(newInstitutions);
+  }
+
+  function removeInstitution(id) {
+    const newInstitutions = institutions.filter(
+      (institution) => institution.id !== id
+    );
+    setInstitutions(newInstitutions);
+    updateEducation(newInstitutions);
+  }
+
+  function updateInstitution(id, value) {
+    const newInstitutions = institutions.map((institution) =>
+      institution.id === id ? { ...institution, ...value } : institution
+    );
+    setInstitutions(newInstitutions);
+    updateEducation(newInstitutions);
+  }
+
+  return (
+    <div className="institution">
+      <ul style={style}>
+        {institutions.map((institution) => (
+          <Institution
+            key={institution.id}
+            institution={institution}
+            removeInstitution={() => removeInstitution(institution.id)}
+            updateInstitution={(value) =>
+              updateInstitution(institution.id, value)
+            }
+            previewMode={previewMode}
+          />
         ))}
       </ul>
+      {!previewMode && (
+        <button type="button" onClick={addInstitution}>
+          Add institution
+        </button>
+      )}
     </div>
   );
 }

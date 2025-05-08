@@ -1,51 +1,63 @@
-export default function Skills({ skills, setSkills }) {
+import { useState } from "react";
+import EditableField from "./EditableField";
+
+function Skill({ removeSkill, updateSkill, previewMode }) {
+  return (
+    <li className="skill">
+      <EditableField
+        type="text"
+        previewPlaceholder="Skill"
+        editPlaceholder="Enter skill..."
+        editMode={true}
+        autoFocus={true}
+        onInput={(e) => updateSkill({ title: e.target.value })}
+        onBlur={(e) => !e.target.value && removeSkill()}
+      />
+    </li>
+  );
+}
+
+export default function Skills({ updateSkills, previewMode, style }) {
+  const [skills, setSkills] = useState([]);
+
   function addSkill() {
-    setSkills([...skills, { id: crypto.randomUUID(), title: "" }]);
+    const newSkills = [...skills, { id: crypto.randomUUID(), title: "" }];
+    setSkills(newSkills);
+    updateSkills(newSkills);
   }
 
   function removeSkill(id) {
-    setSkills(skills.filter((skill) => skill.id !== id));
+    const newSkills = skills.filter((skill) => skill.id !== id);
+    setSkills(newSkills);
+    updateSkills(newSkills);
   }
 
-  function handleChange(id, value) {
-    setSkills(
-      skills.map((skill) =>
-        skill.id === id ? { ...skill, title: value } : skill
-      )
+  function updateSkill(id, value) {
+    const newSkills = skills.map((skill) =>
+      skill.id === id ? { ...skill, ...value } : skill
     );
+    setSkills(newSkills);
+    updateSkills(newSkills);
   }
 
   return (
     <div className="skills">
-      <button type="button" className="add-btn" onClick={addSkill}>
-        Add Skill
-      </button>
-
-      <ul className="skills-list" style={{ listStyleType: "none" }}>
+      <ul style={style}>
         {skills.map((skill) => (
-          <li key={skill.id}>
-            <fieldset>
-              <label htmlFor="skill-1">
-                Skill:{" "}
-                <input
-                  type="text"
-                  value={skill.title}
-                  placeholder="Enter a skill"
-                  onChange={(e) => handleChange(skill.id, e.target.value)}
-                />
-              </label>
-
-              <button
-                type="button"
-                className="remove-btn"
-                onClick={() => removeSkill(skill.id)}
-              >
-                Remove Skill
-              </button>
-            </fieldset>
-          </li>
+          <Skill
+            key={skill.id}
+            skill={skill}
+            removeSkill={() => removeSkill(skill.id)}
+            updateSkill={(value) => updateSkill(skill.id, value)}
+            previewMode={previewMode}
+          />
         ))}
       </ul>
+      {!previewMode && (
+        <button type="button" onClick={addSkill}>
+          Add skill
+        </button>
+      )}
     </div>
   );
 }
