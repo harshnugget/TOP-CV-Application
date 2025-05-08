@@ -1,177 +1,195 @@
 /**
  * EditableField Component
  *
- * Creates an editable element that initially displays text within a <span>.
- * When clicked, it transforms into a <textarea> for editing.
- * The <textarea> is styled to match and overlay the span, resizing dynamically
- * to align with the span's content height and width.
- *
  * Features:
- * - Customizable placeholder text displayed when the input is empty.
+ * - Input types: textarea, text, phone, email, date
+ * - Customizable placeholder text.
  * - Enters edit mode on click, exits on blur or (Enter).
- * - Holding (Shift + Enter) will create a newline.
- * - Supports a callback for handling state and events externally.
+ * - Holding (Shift + Enter) will create a newline for textarea type.
+ * - Support callbacks for handling events externally.
  */
 
 import { useState } from "react";
 
 export default function EditableField({
-  defaultPlaceholderText = "Default text",
-  editPlaceholderText = "Enter some text...",
-  customStyles,
-  editMode = true,
-  multiLine = true,
-  disableEditing = false,
-  callbackFunc,
+  type = "text",
+  previewPlaceholder = "Default",
+  editPlaceholder = "Enter a value...",
+  editMode = false,
+  autoFocus = false,
+  hoveredBgColor = "gainsboro",
+  editModeBgColor = "gainsboro",
+  onInput,
+  onFocus,
+  onBlur,
 }) {
-  const [_editMode, setEditMode] = useState(disableEditing ? false : editMode);
-  const [_hovered, setHovered] = useState(false);
   const [_value, setValue] = useState("");
+  const [_editMode, setEditMode] = useState(editMode);
+  const [_hovered, setHovered] = useState(false);
 
-  const _customStyles = {
-    textAreaBg: "aliceBlue",
-    spanDefaultBg: "transparent",
-    spanHoverBg: "rgb(211,211,211)",
-    ...customStyles,
-  };
+  const allowedTypes = ["text", "phone", "email", "textarea", "date"];
 
-  const divStyles = {
-    display:
-      disableEditing && !_value && !defaultPlaceholderText
-        ? "none"
-        : "inline-block",
-    width: "max-content",
-    maxWidth: "100%",
+  if (!allowedTypes.includes(type)) {
+    throw new Error(
+      `Invalid input type: "${type}".\nMust be one of the following: ${allowedTypes.join(
+        ", "
+      )}.`
+    );
+  }
+
+  // Create and validate a value to display when not in edit mode
+  const previewValue = createPreviewValue();
+
+  const labelStyles = {
+    display: "inline-block",
     position: "relative",
   };
 
-  const textAreaStyles = {
+  const inputStyles = {
     position: "absolute",
     top: "0",
     left: "0",
-    width: "100%",
-    height: "100%",
+    width: type === "date" && _editMode ? "auto" : "100%",
+    height: type === "textarea" ? "100%" : "auto",
+    maxHeight: "100%",
     resize: "none",
-    backgroundColor: _customStyles.textAreaBg,
     border: "none",
     outline: "none",
     overflow: "hidden",
     padding: "0",
     margin: "0",
     boxSizing: "border-box",
-    opacity: _editMode ? "1" : "0",
+    backgroundColor: editModeBgColor,
+    opacity: _editMode ? "1" : "0", // Hide input if not editing
   };
 
   const spanStyles = {
-    visibility: _editMode ? "hidden" : "visible",
-    backgroundColor:
-      _hovered && !disableEditing
-        ? _customStyles.spanHoverBg
-        : _customStyles.spanDefaultBg,
+    visibility:
+      (!previewPlaceholder && !_hovered && !_value) || _editMode // Hide span if editing
+        ? "hidden"
+        : "visible",
+    backgroundColor: _hovered && hoveredBgColor,
   };
 
-  const sharedStyles = {
+  const fontStyles = {
     display: "inline-block",
     fontFamily: "inherit",
     fontSize: "inherit",
     lineHeight: "inherit",
+    letterSpacing: "inherit",
     wordBreak: "break-word",
     whiteSpace: "pre-wrap",
-    padding: "2px",
+    backgroundColor: "inherit",
+    color: "inherit",
   };
 
-  function eventHandler(e) {
-    const states = {
-      editMode: _editMode,
-      hovered: _hovered,
-      value: _value,
-    };
+  const sharedInputAttributes = {
+    className: `editable-field__input--${_editMode ? "edit" : "preview"}`,
+    value: _editMode || type === "date" ? _value : previewValue,
+    autoFocus: autoFocus && _editMode,
+    placeholder: editPlaceholder,
+    onInput: onInputHandler,
+    onFocus: onFocusHandler,
+    onBlur: onBlurHandler,
+    onKeyDown: onKeyDown,
+  };
 
-    switch (e.type) {
-      case "mouseover":
-        setHovered(true);
-        break;
-      case "mouseleave":
-        setHovered(false);
-        break;
+  const spanAttributes = {
+    className: `editable-field__span--${_hovered ? "hovered" : "default"}`,
+  };
+
+  function createPreviewValue() {
+    function fallbackValue(value) {
+      return _editMode
+        ? value || editPlaceholder
+        : value || previewPlaceholder || editPlaceholder;
     }
 
-    if (!_editMode) {
-      switch (e.type) {
-        case "click":
-          if (!disableEditing) {
-            setEditMode(true);
-            states.editMode = true;
-          }
-          break;
+    // Validate and format dates
+    if (type === "date") {
+      const date = new Date(_value);
+      const isValid = !isNaN(date.getTime());
+
+      if (_value && isValid && !_editMode) {
+        return date.toLocaleDateString();
+      }
+
+      // If date is invalid and value is non-empty, simulate empty fallback
+      if (!isValid && _value !== "") {
+        return fallbackValue(""); // Show placeholder instead
       }
     }
 
-    if (_editMode) {
-      switch (e.type) {
-        case "blur":
-          setEditMode(false);
-          states.editMode = false;
-          break;
-        case "keydown":
-          if (e.key === "Enter" && (!e.shiftKey || !multiLine)) {
-            // Prevent newline if Shift is NOT held or multiline is false
-            e.preventDefault();
-            e.target.blur();
-          }
-          break;
-        case "change":
-          setValue(e.target.value);
-          states.value = e.target.value;
-          break;
-      }
+    let displayValue = fallbackValue(_value);
+
+    // Remove newlines for non-textareas
+    if (type !== "textarea") {
+      displayValue = displayValue.replace(/[\r\n]+/g, "");
+    } else {
+      displayValue = displayValue.replace(
+        /\n$/,
+        "\n\u200B" // Increases span height by adding zero-width space after newlines
+      );
     }
 
-    // Send state and event data to callback function
-    if (callbackFunc && typeof callbackFunc === "function") {
-      callbackFunc({ ...states, event: e });
+    return displayValue;
+  }
+
+  function onInputHandler(e) {
+    setValue(e.target.value);
+    if (onInput) onInput(e);
+  }
+
+  function onFocusHandler(e) {
+    setEditMode(true);
+    if (onFocus) onFocus(e);
+  }
+
+  function onBlurHandler(e) {
+    setEditMode(false);
+    if (onBlur) onBlur(e);
+  }
+
+  function onKeyDown(e) {
+    if (e.key === "Enter") {
+      const isTextarea = type === "textarea";
+      const isShift = e.shiftKey;
+      const hasValue = e.target.value;
+
+      // Allow Shift+Enter in textarea ONLY if there's a value
+      if (isTextarea && isShift && hasValue) {
+        return; // allow newline
+      }
+
+      // Prevent default and blur for everything else
+      e.preventDefault();
+      e.target.blur();
     }
   }
 
   return (
-    <div
+    <label
       className="editable-field"
-      style={divStyles}
-      onClick={eventHandler}
-      onMouseOver={eventHandler}
-      onMouseLeave={eventHandler}
+      style={{ ...labelStyles }}
+      onMouseOver={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
-      {!disableEditing && (
+      {type === "textarea" ? (
         <textarea
-          autoFocus={_editMode}
-          className={`editable-field__textarea ${
-            _editMode ? `editable-field__textarea--edit` : ""
-          }`}
-          style={{ ...textAreaStyles, ...sharedStyles }}
-          value={_value}
-          placeholder={editPlaceholderText}
-          onChange={eventHandler}
-          onBlur={eventHandler}
-          onKeyDown={eventHandler}
+          {...sharedInputAttributes}
+          style={{ ...fontStyles, ...inputStyles }}
+        ></textarea>
+      ) : (
+        <input
+          type={type}
+          {...sharedInputAttributes}
+          style={{ ...fontStyles, ...inputStyles }}
         />
       )}
 
-      <span
-        className={`editable-field__span ${
-          _hovered ? "editable-field__span--hovered" : ""
-        }`}
-        style={{
-          ...spanStyles,
-          ...sharedStyles,
-        }}
-      >
-        {(
-          _value || (_editMode ? editPlaceholderText : defaultPlaceholderText)
-        ).replace(
-          /\n$/,
-          "\n\u200B" // Ensures span height increases on newlines
-        )}
+      <span {...spanAttributes} style={{ ...fontStyles, ...spanStyles }}>
+        {previewValue}
       </span>
-    </div>
+    </label>
   );
 }

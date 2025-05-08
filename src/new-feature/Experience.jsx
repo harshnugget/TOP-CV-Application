@@ -1,30 +1,21 @@
 import { useState } from "react";
 import EditableField from "./EditableField";
-import EditableFieldToggle from "./EditableFieldToggle";
-import DateField from "./DateField";
 
 function Responsibility({
   removeResponsibility,
   updateResponsibility,
   previewMode,
 }) {
-  function getTitleData({ event, value }) {
-    if (event.type === "blur" && !value) {
-      removeResponsibility();
-    } else if (event.type === "change") {
-      updateResponsibility({ title: value });
-    }
-  }
-
   return (
     <li className="responsibility">
       <EditableField
-        defaultPlaceholderText="responsibility"
-        editPlaceholderText="Enter a responsibility..."
+        type="text"
+        previewPlaceholder="Responsibility"
+        editPlaceholder="Enter responsibility..."
         editMode={true}
-        multiLine={false}
-        disableEditing={previewMode}
-        callbackFunc={getTitleData}
+        autoFocus={true}
+        onInput={(e) => updateResponsibility({ title: e.target.value })}
+        onBlur={(e) => !e.target.value && removeResponsibility()}
       />
     </li>
   );
@@ -32,19 +23,8 @@ function Responsibility({
 
 function Job({ job, removeJob, updateJob, previewMode }) {
   const [active, setActive] = useState(false);
+  const [toggleDesc, setToggleDesc] = useState(false);
   const { responsibilities } = job;
-
-  function getTitleData({ event, value }) {
-    if (event.type === "blur") {
-      if (!value) {
-        removeJob();
-      } else if (!active) {
-        setActive(true);
-      }
-    } else if (event.type === "change") {
-      updateJob({ title: value });
-    }
-  }
 
   function addResponsibility() {
     const newResponsibilities = [
@@ -54,6 +34,7 @@ function Job({ job, removeJob, updateJob, previewMode }) {
         title: "",
       },
     ];
+
     updateJob({ responsibilities: newResponsibilities });
   }
 
@@ -61,70 +42,95 @@ function Job({ job, removeJob, updateJob, previewMode }) {
     const newResponsibilities = responsibilities.filter(
       (responsibility) => responsibility.id !== id
     );
+
     updateJob({ responsibilities: newResponsibilities });
   }
 
-  function updateResponsibility(id, data) {
+  function updateResponsibility(id, value) {
     const newResponsibilities = responsibilities.map((responsibility) =>
-      responsibility.id === id ? { ...responsibility, ...data } : responsibility
+      responsibility.id === id
+        ? { ...responsibility, ...value }
+        : responsibility
     );
+
     updateJob({ responsibilities: newResponsibilities });
-  }
-
-  function getDescriptionData({ event, value }) {
-    if (event.type === "change") {
-      updateJob({ description: value });
-    }
-  }
-
-  function getDateData({ event, value }) {
-    if (event.type === "change") {
-      updateJob({ date: value });
-    }
   }
 
   return (
     <li className="job">
-      <EditableField
-        defaultPlaceholderText="Job"
-        editPlaceholderText="Enter a job..."
-        editMode={true}
-        multiLine={false}
-        disableEditing={previewMode}
-        callbackFunc={getTitleData}
-      />
+      <div className="job-title" style={{ display: "inline-block" }}>
+        <EditableField
+          type="text"
+          previewPlaceholder="Job"
+          editPlaceholder="Enter a job..."
+          editMode={true}
+          autoFocus={true}
+          onInput={(e) => updateJob({ title: e.target.value })}
+          onBlur={(e) =>
+            !e.target.value ? removeJob() : !active && setActive(true)
+          }
+        />
+      </div>
+
       {active && (
         <>
-          <DateField callbackFunc={getDateData} disableEditing={previewMode} />
-          <ul className="responsibilities" style={{ paddingLeft: "20px" }}>
-            {responsibilities.map((responsibility) => (
-              <Responsibility
-                key={responsibility.id}
-                responsibility={responsibility}
-                removeResponsibility={() =>
-                  removeResponsibility(responsibility.id)
-                }
-                updateResponsibility={(data) =>
-                  updateResponsibility(responsibility.id, data)
-                }
-                previewMode={previewMode}
-              />
-            ))}
-          </ul>
-          {!previewMode && (
-            <button type="button" onClick={addResponsibility}>
-              Add responsibility
-            </button>
-          )}
+          <div className="job-date" style={{ display: "inline-block" }}>
+            <EditableField
+              previewPlaceholder={previewMode ? "" : "dd/mm/yyyy"}
+              editPlaceholder="Enter date..."
+              type="date"
+              editMode={true}
+              autoFocus={true}
+              onInput={(e) => updateJob({ date: e.target.value })}
+            />
+          </div>
 
-          <EditableFieldToggle
-            buttonText="Add description"
-            editPlaceholderText="Enter a description"
-            editMode={false}
-            multiLine={true}
-            disableEditing={previewMode}
-            callbackFunc={getDescriptionData}
-          />
+          <div className="job-responsibilities">
+            <ul style={{ paddingLeft: "20px" }}>
+              {responsibilities.map((responsibility) => (
+                <Responsibility
+                  key={responsibility.id}
+                  responsibility={responsibility}
+                  removeResponsibility={() =>
+                    removeResponsibility(responsibility.id)
+                  }
+                  updateResponsibility={(value) =>
+                    updateResponsibility(responsibility.id, value)
+                  }
+                  previewMode={previewMode}
+                />
+              ))}
+            </ul>
+            {!previewMode && (
+              <button
+                type="button"
+                onClick={addResponsibility}
+                style={{ display: "block" }}
+              >
+                Add responsibility
+              </button>
+            )}
+          </div>
+
+          <div className="job-description">
+            {toggleDesc ? (
+              <EditableField
+                previewPlaceholder="Description"
+                editPlaceholder="Enter a description..."
+                type="textarea"
+                editMode={true}
+                autoFocus={true}
+                onInput={(e) => updateJob({ description: e.target.value })}
+                onBlur={(e) => !e.target.value && setToggleDesc(false)}
+              />
+            ) : (
+              !previewMode && (
+                <button type="button" onClick={() => setToggleDesc(true)}>
+                  Add description
+                </button>
+              )
+            )}
+          </div>
         </>
       )}
     </li>
@@ -155,9 +161,9 @@ export default function Experience({ updateExperience, previewMode, style }) {
     updateExperience(newJobs);
   }
 
-  function updateJob(id, data) {
+  function updateJob(id, value) {
     const newJobs = jobs.map((job) =>
-      job.id === id ? { ...job, ...data } : job
+      job.id === id ? { ...job, ...value } : job
     );
     setJobs(newJobs);
     updateExperience(newJobs);
@@ -171,7 +177,7 @@ export default function Experience({ updateExperience, previewMode, style }) {
             key={job.id}
             job={job}
             removeJob={() => removeJob(job.id)}
-            updateJob={(data) => updateJob(job.id, data)}
+            updateJob={(value) => updateJob(job.id, value)}
             previewMode={previewMode}
           />
         ))}

@@ -2,23 +2,16 @@ import { useState } from "react";
 import EditableField from "./EditableField";
 
 function Skill({ removeSkill, updateSkill, previewMode }) {
-  function getData({ event, value }) {
-    if (event.type === "blur" && !value) {
-      removeSkill();
-    } else if (event.type === "change") {
-      updateSkill({ value });
-    }
-  }
-
   return (
     <li className="skill">
       <EditableField
-        defaultPlaceholderText="Skill"
-        editPlaceholderText="Enter a skill..."
+        type="text"
+        previewPlaceholder="Skill"
+        editPlaceholder="Enter skill..."
         editMode={true}
-        multiLine={false}
-        disableEditing={previewMode}
-        callbackFunc={getData}
+        autoFocus={true}
+        onInput={(e) => updateSkill({ title: e.target.value })}
+        onBlur={(e) => !e.target.value && removeSkill()}
       />
     </li>
   );
@@ -28,7 +21,7 @@ export default function Skills({ updateSkills, previewMode, style }) {
   const [skills, setSkills] = useState([]);
 
   function addSkill() {
-    const newSkills = [...skills, { id: crypto.randomUUID(), value: "" }];
+    const newSkills = [...skills, { id: crypto.randomUUID(), title: "" }];
     setSkills(newSkills);
     updateSkills(newSkills);
   }
@@ -39,23 +32,23 @@ export default function Skills({ updateSkills, previewMode, style }) {
     updateSkills(newSkills);
   }
 
-  function updateSkill(id, data) {
+  function updateSkill(id, value) {
     const newSkills = skills.map((skill) =>
-      skill.id === id ? { ...skill, ...data } : skill
+      skill.id === id ? { ...skill, ...value } : skill
     );
     setSkills(newSkills);
     updateSkills(newSkills);
   }
 
   return (
-    <>
-      <ul className="skills" style={style}>
+    <div className="skills">
+      <ul style={style}>
         {skills.map((skill) => (
           <Skill
             key={skill.id}
             skill={skill}
             removeSkill={() => removeSkill(skill.id)}
-            updateSkill={(data) => updateSkill(skill.id, data)}
+            updateSkill={(value) => updateSkill(skill.id, value)}
             previewMode={previewMode}
           />
         ))}
@@ -65,6 +58,6 @@ export default function Skills({ updateSkills, previewMode, style }) {
           Add skill
         </button>
       )}
-    </>
+    </div>
   );
 }

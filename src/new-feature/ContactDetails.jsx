@@ -1,66 +1,59 @@
 import { useState } from "react";
 import EditableField from "./EditableField";
 
-function Name({ setFirstName, setLastName, previewMode, style }) {
-  function getFirstName({ value }) {
-    setFirstName(value);
-  }
-
-  function getLastName({ value }) {
-    setLastName(value);
-  }
-
+function Name({ updateFirstName, updateLastName, previewMode, style }) {
   return (
-    <div className="name" style={style}>
+    <div className="name" style={{ ...style }}>
       <EditableField
-        defaultPlaceholderText="First"
-        editPlaceholderText="Enter first name..."
+        type="text"
+        previewPlaceholder="First"
+        editPlaceholder="Enter first name..."
         editMode={false}
-        multiLine={false}
-        disableEditing={previewMode}
-        callbackFunc={getFirstName}
+        onInput={(e) => updateFirstName({ value: e.target.value })}
       />
+      <span>&nbsp;</span>
       <EditableField
-        defaultPlaceholderText="Last"
-        editPlaceholderText="Enter last name..."
+        type="text"
+        previewPlaceholder="Last"
+        editPlaceholder="Enter last name..."
         editMode={false}
-        multiLine={false}
-        disableEditing={previewMode}
-        callbackFunc={getLastName}
+        onInput={(e) => updateLastName({ value: e.target.value })}
       />
     </div>
   );
 }
 
-function Email({ setEmail, previewMode, style }) {
+function Email({ updateEmail, previewMode, style }) {
   function getEmail({ value }) {
-    setEmail(value);
+    updateEmail(value);
   }
+
   return (
     <div className="email" style={style}>
       <EditableField
-        defaultPlaceholderText="my-email@email.com"
-        editPlaceholderText="Enter email..."
+        type="email"
+        previewPlaceholder="my-email@email.com"
+        editPlaceholder="Enter email..."
         editMode={false}
-        disableEditing={previewMode}
-        callbackFunc={getEmail}
+        onInput={(e) => getEmail({ value: e.target.value })}
       />
     </div>
   );
 }
 
-function Phone({ setPhone, previewMode, style }) {
+function Phone({ updatePhone, previewMode, style }) {
   function getPhone({ value }) {
-    setPhone(value);
+    updatePhone(value);
   }
+
   return (
     <div className="phone" style={style}>
       <EditableField
-        defaultPlaceholderText="0123456789"
-        editPlaceholderText="Enter phone..."
+        type="phone"
+        previewPlaceholder="0123456789"
+        editPlaceholder="Enter phone..."
         editMode={false}
-        disableEditing={previewMode}
-        callbackFunc={getPhone}
+        onInput={(e) => getPhone({ value: e.target.value })}
       />
     </div>
   );
@@ -78,25 +71,25 @@ export default function ContactDetails({
     phone: "",
   });
 
-  function setFirstName(value) {
+  function updateFirstName(value) {
     const newData = { ...data, firstName: value };
     setData(newData);
     updateContactDetails(newData);
   }
 
-  function setLastName(value) {
+  function updateLastName(value) {
     const newData = { ...data, lastName: value };
     setData(newData);
     updateContactDetails(newData);
   }
 
-  function setEmail(value) {
+  function updateEmail(value) {
     const newData = { ...data, email: value };
     setData(newData);
     updateContactDetails(newData);
   }
 
-  function setPhone(value) {
+  function updatePhone(value) {
     const newData = { ...data, phone: value };
     setData(newData);
     updateContactDetails(newData);
@@ -105,19 +98,19 @@ export default function ContactDetails({
   return (
     <div className="contact-details" style={{ ...style }}>
       <Name
-        style={{ display: "flex" }}
-        setFirstName={setFirstName}
-        setLastName={setLastName}
+        style={{ display: "inline-block" }}
+        updateFirstName={updateFirstName}
+        updateLastName={updateLastName}
         previewMode={previewMode}
       />
       <Email
-        style={{ display: "flex" }}
-        setEmail={setEmail}
+        style={{ display: "block" }}
+        updateEmail={updateEmail}
         previewMode={previewMode}
       />
       <Phone
         style={{ display: "flex" }}
-        setPhone={setPhone}
+        updatePhone={updatePhone}
         previewMode={previewMode}
       />
     </div>
