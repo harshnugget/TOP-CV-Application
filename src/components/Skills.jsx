@@ -10,6 +10,8 @@ function Skill({ removeSkill, updateSkill, previewMode }) {
         editPlaceholder="Enter skill..."
         editMode={true}
         autoFocus={true}
+        maxLength="20"
+        previewModeOnly={previewMode}
         onInput={(e) => updateSkill({ title: e.target.value })}
         onBlur={(e) => !e.target.value && removeSkill()}
       />
@@ -42,19 +44,26 @@ export default function Skills({ updateSkills, previewMode, style }) {
 
   return (
     <div className="skills">
-      <ul style={style}>
-        {skills.map((skill) => (
-          <Skill
-            key={skill.id}
-            skill={skill}
-            removeSkill={() => removeSkill(skill.id)}
-            updateSkill={(value) => updateSkill(skill.id, value)}
-            previewMode={previewMode}
-          />
-        ))}
-      </ul>
+      {skills.length > 0 && (
+        <ul style={style}>
+          {skills.map((skill) => (
+            <Skill
+              key={skill.id}
+              skill={skill}
+              removeSkill={() => removeSkill(skill.id)}
+              updateSkill={(value) => updateSkill(skill.id, value)}
+              previewMode={previewMode}
+            />
+          ))}
+        </ul>
+      )}
+
       {!previewMode && (
-        <button type="button" onClick={addSkill}>
+        <button
+          type="button"
+          className="add-btn add-btn__skill"
+          onClick={addSkill}
+        >
           Add skill
         </button>
       )}

@@ -15,6 +15,8 @@ function Subject({ removeSubject, updateSubject, previewMode }) {
           editPlaceholder="Enter subject..."
           editMode={true}
           autoFocus={true}
+          maxLength="26"
+          previewModeOnly={previewMode}
           onInput={(e) => updateSubject({ title: e.target.value })}
           onBlur={(e) => {
             !e.target.value && removeSubject();
@@ -33,6 +35,8 @@ function Subject({ removeSubject, updateSubject, previewMode }) {
               editPlaceholder="Enter grade..."
               editMode={true}
               autoFocus={true}
+              maxLength="26"
+              previewModeOnly={previewMode}
               onInput={(e) => updateSubject({ grade: e.target.value })}
               onBlur={(e) => {
                 e.target.value ? setSeparator(true) : setSeparator(false);
@@ -48,6 +52,7 @@ function Subject({ removeSubject, updateSubject, previewMode }) {
                 editPlaceholder="Enter date..."
                 type="date"
                 editMode={true}
+                previewModeOnly={previewMode}
                 autoFocus={true}
                 onInput={(e) => updateSubject({ date: e.target.value })}
               />
@@ -106,6 +111,8 @@ function Institution({
           editPlaceholder="Enter institution..."
           editMode={true}
           autoFocus={true}
+          maxLength="50"
+          previewModeOnly={previewMode}
           onInput={(e) => updateInstitution({ title: e.target.value })}
           onBlur={(e) =>
             !e.target.value ? removeInstitution() : !active && setActive(true)
@@ -122,6 +129,7 @@ function Institution({
               type="date"
               editMode={true}
               autoFocus={true}
+              previewModeOnly={previewMode}
               onInput={(e) => updateInstitution({ date: e.target.value })}
             />
           </div>
@@ -141,7 +149,11 @@ function Institution({
             )}
 
             {!previewMode && (
-              <button type="button" onClick={addSubject}>
+              <button
+                type="button"
+                className="add-btn add-btn__subject"
+                onClick={addSubject}
+              >
                 Add subject
               </button>
             )}
@@ -155,6 +167,8 @@ function Institution({
                 type="textarea"
                 editMode={true}
                 autoFocus={true}
+                previewModeOnly={previewMode}
+                maxLength="150"
                 onInput={(e) =>
                   updateInstitution({ description: e.target.value })
                 }
@@ -162,7 +176,11 @@ function Institution({
               />
             ) : (
               !previewMode && (
-                <button type="button" onClick={() => setToggleDesc(true)}>
+                <button
+                  type="button"
+                  className="add-btn add-btn__description"
+                  onClick={() => setToggleDesc(true)}
+                >
                   Add description
                 </button>
               )
@@ -210,21 +228,28 @@ export default function Education({ updateEducation, previewMode, style }) {
 
   return (
     <div className="education">
-      <ul style={style}>
-        {institutions.map((institution) => (
-          <Institution
-            key={institution.id}
-            institution={institution}
-            removeInstitution={() => removeInstitution(institution.id)}
-            updateInstitution={(value) =>
-              updateInstitution(institution.id, value)
-            }
-            previewMode={previewMode}
-          />
-        ))}
-      </ul>
+      {institutions.length > 0 && (
+        <ul style={style}>
+          {institutions.map((institution) => (
+            <Institution
+              key={institution.id}
+              institution={institution}
+              removeInstitution={() => removeInstitution(institution.id)}
+              updateInstitution={(value) =>
+                updateInstitution(institution.id, value)
+              }
+              previewMode={previewMode}
+            />
+          ))}
+        </ul>
+      )}
+
       {!previewMode && (
-        <button type="button" onClick={addInstitution}>
+        <button
+          type="button"
+          className="add-btn add-btn__institution"
+          onClick={addInstitution}
+        >
           Add institution
         </button>
       )}

@@ -14,6 +14,8 @@ function Responsibility({
         editPlaceholder="Enter responsibility..."
         editMode={true}
         autoFocus={true}
+        maxLength="50"
+        previewModeOnly={previewMode}
         onInput={(e) => updateResponsibility({ title: e.target.value })}
         onBlur={(e) => !e.target.value && removeResponsibility()}
       />
@@ -65,6 +67,7 @@ function Job({ job, removeJob, updateJob, previewMode }) {
           editPlaceholder="Enter a job..."
           editMode={true}
           autoFocus={true}
+          maxLength="50"
           onInput={(e) => updateJob({ title: e.target.value })}
           onBlur={(e) =>
             !e.target.value ? removeJob() : !active && setActive(true)
@@ -81,6 +84,7 @@ function Job({ job, removeJob, updateJob, previewMode }) {
               type="date"
               editMode={true}
               autoFocus={true}
+              previewModeOnly={previewMode}
               onInput={(e) => updateJob({ date: e.target.value })}
             />
           </div>
@@ -111,6 +115,7 @@ function Job({ job, removeJob, updateJob, previewMode }) {
             {!previewMode && (
               <button
                 type="button"
+                className="add-btn add-btn__responsibility"
                 onClick={addResponsibility}
                 style={{ display: "block" }}
               >
@@ -127,12 +132,18 @@ function Job({ job, removeJob, updateJob, previewMode }) {
                 type="textarea"
                 editMode={true}
                 autoFocus={true}
+                maxLength="150"
+                previewModeOnly={previewMode}
                 onInput={(e) => updateJob({ description: e.target.value })}
                 onBlur={(e) => !e.target.value && setToggleDesc(false)}
               />
             ) : (
               !previewMode && (
-                <button type="button" onClick={() => setToggleDesc(true)}>
+                <button
+                  type="button"
+                  className="add-btn add-btn__description"
+                  onClick={() => setToggleDesc(true)}
+                >
                   Add description
                 </button>
               )
@@ -178,19 +189,21 @@ export default function Experience({ updateExperience, previewMode, style }) {
 
   return (
     <div className="experience">
-      <ul style={style}>
-        {jobs.map((job) => (
-          <Job
-            key={job.id}
-            job={job}
-            removeJob={() => removeJob(job.id)}
-            updateJob={(value) => updateJob(job.id, value)}
-            previewMode={previewMode}
-          />
-        ))}
-      </ul>
+      {jobs.length > 0 && (
+        <ul style={style}>
+          {jobs.map((job) => (
+            <Job
+              key={job.id}
+              job={job}
+              removeJob={() => removeJob(job.id)}
+              updateJob={(value) => updateJob(job.id, value)}
+              previewMode={previewMode}
+            />
+          ))}
+        </ul>
+      )}
       {!previewMode && (
-        <button type="button" onClick={addJob}>
+        <button type="button" className="add-btn add-btn__job" onClick={addJob}>
           Add job
         </button>
       )}
