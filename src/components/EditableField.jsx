@@ -17,6 +17,8 @@ export default function EditableField({
   editPlaceholder = "Enter a value...",
   editMode = false,
   autoFocus = false,
+  minLength,
+  maxLength,
   hoveredBgColor = "gainsboro",
   editModeBgColor = "gainsboro",
   onInput,
@@ -73,10 +75,11 @@ export default function EditableField({
 
   const fontStyles = {
     display: "inline-block",
-    fontFamily: "inherit",
     fontSize: "inherit",
-    lineHeight: "inherit",
-    letterSpacing: "inherit",
+    fontFamily: _value || !_editMode ? "inherit" : "sans-serif",
+    fontWeight: _value || !_editMode ? "inherit" : "normal",
+    lineHeight: _value || !_editMode ? "inherit" : "normal",
+    letterSpacing: _value || !_editMode ? "inherit" : "normal",
     wordBreak: "break-word",
     whiteSpace: "pre-wrap",
     backgroundColor: "inherit",
@@ -85,9 +88,11 @@ export default function EditableField({
 
   const sharedInputAttributes = {
     className: `editable-field__input--${_editMode ? "edit" : "preview"}`,
-    value: _editMode || type === "date" ? _value : previewValue,
+    value: ((_editMode || type === "date") && _value) || "",
     autoFocus: autoFocus && _editMode,
     placeholder: editPlaceholder,
+    minLength,
+    maxLength,
     onInput: onInputHandler,
     onFocus: onFocusHandler,
     onBlur: onBlurHandler,
@@ -169,7 +174,7 @@ export default function EditableField({
 
   return (
     <label
-      className="editable-field"
+      className={`editable-field ${_value ? "valid" : "invalid"}`}
       style={{ ...labelStyles }}
       onMouseOver={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
