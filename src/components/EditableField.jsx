@@ -17,6 +17,7 @@ export default function EditableField({
   editPlaceholder = "Enter a value...",
   editMode = false,
   autoFocus = false,
+  previewModeOnly = false,
   minLength,
   maxLength,
   hoveredBgColor = "gainsboro",
@@ -26,7 +27,9 @@ export default function EditableField({
   onBlur,
 }) {
   const [_value, setValue] = useState("");
-  const [_editMode, setEditMode] = useState(editMode);
+  const [_editMode, setEditMode] = useState(
+    !previewModeOnly ? editMode : false
+  );
   const [_hovered, setHovered] = useState(false);
 
   const allowedTypes = ["text", "phone", "email", "textarea", "date"];
@@ -67,21 +70,23 @@ export default function EditableField({
 
   const spanStyles = {
     visibility:
-      (!previewPlaceholder && !_hovered && !_value) || _editMode // Hide span if editing
+      (previewModeOnly && type === "date" && !_value) ||
+      (!previewPlaceholder && !_hovered && !_value) ||
+      _editMode
         ? "hidden"
         : "visible",
-    backgroundColor: _hovered && hoveredBgColor,
+    backgroundColor: !previewModeOnly && _hovered && hoveredBgColor,
   };
 
   const fontStyles = {
     display: "inline-block",
     fontSize: "inherit",
+    lineHeight: "normal",
+    letterSpacing: "normal",
     fontFamily: _value || !_editMode ? "inherit" : "sans-serif",
     fontWeight: _value || !_editMode ? "inherit" : "normal",
-    lineHeight: _value || !_editMode ? "inherit" : "normal",
-    letterSpacing: _value || !_editMode ? "inherit" : "normal",
     wordBreak: "break-word",
-    whiteSpace: "pre-wrap",
+    whiteSpace: type === "textarea" ? "pre-wrap" : "pre",
     backgroundColor: "inherit",
     color: "inherit",
   };
@@ -96,7 +101,8 @@ export default function EditableField({
     onInput: onInputHandler,
     onFocus: onFocusHandler,
     onBlur: onBlurHandler,
-    onKeyDown: onKeyDown,
+    onKeyDown: onKeyDownHandler,
+    onPaste: onPasteHandler,
   };
 
   const spanAttributes = {
@@ -141,21 +147,27 @@ export default function EditableField({
   }
 
   function onInputHandler(e) {
+    if (previewModeOnly) return;
+
     setValue(e.target.value);
     if (onInput) onInput(e);
   }
 
   function onFocusHandler(e) {
+    if (previewModeOnly) return;
+
     setEditMode(true);
     if (onFocus) onFocus(e);
   }
 
   function onBlurHandler(e) {
+    if (previewModeOnly) return;
+
     setEditMode(false);
     if (onBlur) onBlur(e);
   }
 
-  function onKeyDown(e) {
+  function onKeyDownHandler(e) {
     if (e.key === "Enter") {
       const isTextarea = type === "textarea";
       const isShift = e.shiftKey;
@@ -170,6 +182,11 @@ export default function EditableField({
       e.preventDefault();
       e.target.blur();
     }
+  }
+
+  function onPasteHandler(e) {
+    e.preventDefault();
+    // TODO...
   }
 
   return (
