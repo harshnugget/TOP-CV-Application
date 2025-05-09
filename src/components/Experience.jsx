@@ -86,21 +86,28 @@ function Job({ job, removeJob, updateJob, previewMode }) {
           </div>
 
           <div className="job-responsibilities">
-            <ul style={{ paddingLeft: "20px" }}>
-              {responsibilities.map((responsibility) => (
-                <Responsibility
-                  key={responsibility.id}
-                  responsibility={responsibility}
-                  removeResponsibility={() =>
-                    removeResponsibility(responsibility.id)
-                  }
-                  updateResponsibility={(value) =>
-                    updateResponsibility(responsibility.id, value)
-                  }
-                  previewMode={previewMode}
-                />
-              ))}
-            </ul>
+            {responsibilities.length > 0 && (
+              <>
+                <div className="job-responsibilities-header">
+                  Responsibilities:
+                </div>
+                <ul style={{ paddingLeft: "20px" }}>
+                  {responsibilities.map((responsibility) => (
+                    <Responsibility
+                      key={responsibility.id}
+                      responsibility={responsibility}
+                      removeResponsibility={() =>
+                        removeResponsibility(responsibility.id)
+                      }
+                      updateResponsibility={(value) =>
+                        updateResponsibility(responsibility.id, value)
+                      }
+                      previewMode={previewMode}
+                    />
+                  ))}
+                </ul>
+              </>
+            )}
             {!previewMode && (
               <button
                 type="button"
@@ -170,8 +177,8 @@ export default function Experience({ updateExperience, previewMode, style }) {
   }
 
   return (
-    <>
-      <ul className="jobs" style={style}>
+    <div className="experience">
+      <ul style={style}>
         {jobs.map((job) => (
           <Job
             key={job.id}
@@ -187,6 +194,6 @@ export default function Experience({ updateExperience, previewMode, style }) {
           Add job
         </button>
       )}
-    </>
+    </div>
   );
 }
