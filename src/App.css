@@ -1,9 +1,3 @@
-:root {
-  font-size: 1rem;
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
-}
-
 * {
   box-sizing: border-box;
 }
@@ -15,11 +9,19 @@
   height: 100vh;
   min-height: max-content;
   background-color: GhostWhite;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
 }
 
 /* ### PAGE */
+.cv-page-container {
+  width: 200px;
+  container-type: inline-size;
+}
 .cv-page {
-  padding: 1rem;
+  padding: 2cqw 3cqw;
+  font-size: 4cqw;
+  line-height: normal;
 }
 
 /* ### HEADERS ### */
@@ -29,137 +31,181 @@
   border-bottom: none;
   background-color: whitesmoke;
   text-align: right;
-  padding: 0.4rem;
   color: royalblue;
   font-weight: bold;
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
-  font-size: 1rem;
+  padding: 0.45em 0.3em;
+  font-size: 0.45em;
 }
-/* Select the last header */
 .cv-page > [class$="-header"]:not(:has(~ [class$="-header"])) {
   border-bottom: 2px solid lightgrey;
 }
 
-/* ### CONTENT */
+/* ### CONTENT ### */
 .cv-page > [class$="-content"] {
   border: 2px solid lightgrey;
   border-right: none;
   border-left: none;
   border-bottom: none;
-  background-color: whitesmoke;
-  padding: 0.7rem 0.6rem;
+  background-color: white;
+  padding: 0.2em 0.3em;
+  line-height: 0;
 }
-/* Select the last content */
 .cv-page > [class$="-content"]:not(:has(~ [class$="-content"])) {
   border-bottom: 2px solid lightgrey;
 }
 
+/* ### PROFILE ### */
+.profile {
+  font-size: 0.45em;
+}
+.profile label {
+  margin: 0.5em 0;
+}
+
 /* ### CONTACT DETAILS ### */
 .contact-details {
-  margin: 0.4rem;
+  margin: 0.3em;
 }
 .contact-details .name {
-  font-size: 1.4rem;
+  font-size: 0.9em;
   font-weight: bold;
-  margin: 0.4rem 0;
+  margin: 0.2em 0;
   color: royalblue;
 }
 .contact-details .email,
-.contact-details .phone {
-  margin: 0.1rem 0;
+.contact-details .phone,
+.contact-details .city,
+.contact-details .post-code {
+  margin: 0.1em 0;
+  font-size: 0.4em;
 }
 
 /* ### SKILLS ### */
 .skills > ul {
   display: grid !important;
-  grid-template-columns: repeat(2, 1fr); /* Equal-width columns */
+  grid-template-columns: repeat(auto-fit, minmax(10ch, max-content));
   list-style-type: initial;
   list-style-position: inside;
-  max-width: max-content;
-  overflow: hidden;
+  margin-bottom: 0.2em;
 }
 .skill {
-  margin: 0.2rem 0;
-  margin-right: 1.6rem;
-  min-width: 6rem;
+  font-size: 0.45em;
+  margin: 0.5em 0;
+  margin-right: 1.6em;
+  min-width: 100%;
+  overflow-x: hidden;
+  white-space: nowrap;
 }
 
 /* ### EXPERIENCE ### */
 .experience > ul {
   list-style-type: none;
+  margin-bottom: 1em;
+  margin-bottom: 0.2em;
 }
-.job {
-  margin-bottom: 1rem;
+.job:not(:first-of-type) {
+  margin-top: 0.8em;
 }
 .job-title {
   font-weight: bold;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+  font-size: 0.5em;
+  margin-bottom: 0.45em;
 }
 .job-date {
-  margin-left: 0.6rem;
+  margin-left: 1em;
   font-weight: bold;
-  font-size: 0.8rem;
+  font-size: 0.4em;
   color: dimgray;
 }
 .job-responsibilities-header {
-  margin: 0.2rem 0;
+  font-size: 0.45em;
+  margin: 0.2em 0;
 }
 .job-responsibilities > ul {
   list-style-type: initial;
   list-style-position: inside;
-  margin: 0.5rem 0;
+  margin: 0.45em 0;
 }
 .responsibility {
-  margin: 0.2rem 0;
+  font-size: 0.45em;
+  margin: 0.2em 0;
 }
 .job-description {
-  margin: 0.2rem 0;
+  font-size: 0.45em;
 }
 .job-responsibilities > button,
 .job-description > button {
-  margin: 0;
-  margin-left: 1rem;
+  margin-left: 1.5em;
 }
 
 /* ### EDUCATION ### */
-.institution {
-  margin-bottom: 1rem;
+.education > ul {
+  margin-bottom: 0.2em;
+}
+
+.institution:not(:first-of-type) {
+  margin-top: 0.8em;
 }
 .institution > ul {
   list-style-type: none;
 }
 .institution-title {
   font-weight: bold;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+  font-size: 0.5em;
+  margin-bottom: 0.45em;
 }
 .institution-date {
-  margin-left: 0.6rem;
+  margin-left: 1em;
   font-weight: bold;
-  font-size: 0.8rem;
+  font-size: 0.4em;
   color: dimgray;
 }
 .subjects > ul {
   list-style-type: initial;
   list-style-position: inside;
-  margin: 0.5rem 0;
+  margin-top: 0.2em;
+  margin-bottom: 0.45em;
 }
 .subject {
-  margin: 0.2rem 0;
+  font-size: 0.45em;
+  margin: 0.2em 0;
 }
 .subject-title {
-  margin-right: 0.2rem;
+  margin-right: 0.2em;
 }
 .subject-grade {
-  margin-left: 0.2rem;
+  margin-left: 0.2em;
 }
 .institution-description {
-  margin: 0.2rem 0;
+  font-size: 0.45em;
 }
 .subjects > button,
 .institution-description > button {
-  margin: 0;
-  margin-left: 1rem;
+  margin-left: 1.5em;
+}
+
+/* ### BUTTONS ### */
+.preview-btn,
+.edit-btn,
+.add-btn {
+  font-family: inherit;
+  font-size: 2cqw;
+  padding: 0.1em 0.3em;
+  margin: 0.3em;
+  border-style: dotted;
+  border-radius: 2px;
+  border-color: lightgray;
+  background-color: whitesmoke;
+}
+.edit-btn,
+.preview-btn {
+  font-size: 0.9rem;
+  padding: 0.3rem 0.4rem;
+  margin: 0.5rem 0.5rem 0.5rem 0;
+}
+.add-btn:hover,
+.edit-btn:hover,
+.preview-btn:hover {
+  filter: brightness(0.9);
+  cursor: pointer;
 }
