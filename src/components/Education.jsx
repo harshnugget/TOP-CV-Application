@@ -4,11 +4,11 @@ import EditableField from "./EditableField";
 function Subject({ removeSubject, updateSubject, previewMode }) {
   const [separator, setSeparator] = useState(false);
   const [gradeActive, setGradeActive] = useState(false);
-  const [dateActive, setDateActive] = useState(false);
+  // const [dateActive, setDateActive] = useState(false);
 
   return (
     <li className="subject">
-      <div style={{ display: "flex" }}>
+      <div className="subject-title" style={{ display: "inline-block" }}>
         <EditableField
           type="text"
           previewPlaceholder="Subject"
@@ -21,22 +21,28 @@ function Subject({ removeSubject, updateSubject, previewMode }) {
             e.target.value ? setGradeActive(true) : setGradeActive(false);
           }}
         />
-        {separator && <span>-</span>}
-        {gradeActive && (
-          <>
+      </div>
+
+      {separator && <span>-</span>}
+      {gradeActive && (
+        <>
+          <div className="subject-grade" style={{ display: "inline-block" }}>
             <EditableField
               type="text"
-              previewPlaceholder={previewMode ? "" : "Grade"}
+              previewPlaceholder={previewMode ? "" : "[Enter grade]"}
               editPlaceholder="Enter grade..."
               editMode={true}
               autoFocus={true}
               onInput={(e) => updateSubject({ grade: e.target.value })}
               onBlur={(e) => {
                 e.target.value ? setSeparator(true) : setSeparator(false);
-                e.target.value ? setDateActive(true) : setDateActive(false);
+                // e.target.value ? setDateActive(true) : setDateActive(false);
               }}
             />
-            {dateActive && (
+          </div>
+
+          {/* {dateActive && (
+            <div className="subject-date" style={{ display: "inline-block" }}>
               <EditableField
                 previewPlaceholder={previewMode ? "" : "dd/mm//yyyy"}
                 editPlaceholder="Enter date..."
@@ -45,10 +51,10 @@ function Subject({ removeSubject, updateSubject, previewMode }) {
                 autoFocus={true}
                 onInput={(e) => updateSubject({ date: e.target.value })}
               />
-            )}
-          </>
-        )}
-      </div>
+            </div>
+          )} */}
+        </>
+      )}
     </li>
   );
 }
@@ -111,25 +117,29 @@ function Institution({
         <>
           <div className="institution-date" style={{ display: "inline-block" }}>
             <EditableField
-              previewPlaceholder="dd/mm/yyyy"
+              previewPlaceholder={previewMode ? "" : "dd/mm//yyyy"}
               editPlaceholder="Enter date..."
               type="date"
-              editMode={false}
+              editMode={true}
+              autoFocus={true}
               onInput={(e) => updateInstitution({ date: e.target.value })}
             />
           </div>
           <div className="subjects">
-            <ul style={{ paddingLeft: "20px" }}>
-              {subjects.map((subject) => (
-                <Subject
-                  key={subject.id}
-                  subject={subject}
-                  removeSubject={() => removeSubject(subject.id)}
-                  updateSubject={(value) => updateSubject(subject.id, value)}
-                  previewMode={previewMode}
-                />
-              ))}
-            </ul>
+            {subjects.length > 0 && (
+              <ul style={{ paddingLeft: "20px" }}>
+                {subjects.map((subject) => (
+                  <Subject
+                    key={subject.id}
+                    subject={subject}
+                    removeSubject={() => removeSubject(subject.id)}
+                    updateSubject={(value) => updateSubject(subject.id, value)}
+                    previewMode={previewMode}
+                  />
+                ))}
+              </ul>
+            )}
+
             {!previewMode && (
               <button type="button" onClick={addSubject}>
                 Add subject
@@ -199,7 +209,7 @@ export default function Education({ updateEducation, previewMode, style }) {
   }
 
   return (
-    <div className="institution">
+    <div className="education">
       <ul style={style}>
         {institutions.map((institution) => (
           <Institution
