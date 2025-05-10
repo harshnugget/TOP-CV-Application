@@ -67,6 +67,7 @@ function Job({ job, removeJob, updateJob, previewMode }) {
           editPlaceholder="Enter a job..."
           editMode={true}
           autoFocus={true}
+          previewModeOnly={previewMode}
           maxLength="50"
           onInput={(e) => updateJob({ title: e.target.value })}
           onBlur={(e) =>
